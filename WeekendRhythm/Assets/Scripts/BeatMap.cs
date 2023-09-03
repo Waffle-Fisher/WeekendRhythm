@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-
-
 public class BeatMap : MonoBehaviour
 {
-    enum Direction {Up, Down, Left, Right, None};
+    public enum Direction {Up, Down, Left, Right, None};
     
     [System.Serializable]
     public struct Beat{
@@ -29,23 +27,31 @@ public class BeatMap : MonoBehaviour
     [SerializeField]
     Sprite Right;
     [Space(8)]
-    [SerializeField] private List<Beat> beats;
-    List<GameObject> beatObject;
-    
+    [SerializeField] 
+    private List<Beat> beats;
+    List<Transform> beatObjects;
+    [Header("Settings")]
+    [SerializeField][Min(0)] 
+    private float speed;
+
     
     void Start()
     {
         if (beats == null){ Debug.LogError("No Beats"); return;}
-        beatObject = new List<GameObject>();
-        gameObject.GetComponentsInChildren<GameObject>(true, beatObject);
-        if(beats.Count > beatObject.Count){ Debug.LogError("Not enough beats"); return;}
-        beatObject.RemoveRange(beats.Count,beatObject.Count - beats.Count);
+        beatObjects = new List<Transform>();
+        GetComponentsInChildren<Transform>(true, beatObjects);
+        beatObjects.RemoveAt(0);
+        if(beats.Count > beatObjects.Count){ Debug.LogError("Not enough beats"); return;}
+        foreach(Transform t in beatObjects){ t.gameObject.SetActive(false);}
+        beatObjects.RemoveRange(beats.Count,beatObjects.Count - beats.Count);
 
         for(int i = 0; i < beats.Count; i++)
         {
-            // adjust beatObject pos based on time
-            beatObject[i].transform.position = new Vector3(0,0,0);
-            //changeSprite(beatObject[i].GetComponent<SpriteRenderer>, beats[i].direction);
+            // adjust beatObjects pos based on time
+            beatObjects[i].position = new Vector3(2 * i,0,0);
+            SpriteRenderer s = beatObjects[i].GetComponent<SpriteRenderer>();
+            //beatObjects[i].gameObject.SetActive(false);
+            ChangeSprite(s, beats[i].direction);
         }
     }
 
@@ -55,7 +61,7 @@ public class BeatMap : MonoBehaviour
 
     }
 
-    void changeSprite(SpriteRenderer sr, Direction d)
+    void ChangeSprite(SpriteRenderer sr, Direction d)
     {
         if(d == Direction.Up)
         {
@@ -63,15 +69,15 @@ public class BeatMap : MonoBehaviour
         }
         else if(d == Direction.Down)
         {
-            sr.Sprite = Down;
+            sr.sprite = Down;
         }
         else if(d == Direction.Left)   
         {
-            sr.Sprite = Left;
+            sr.sprite = Left;
         }
         else
         {
-            sr.Sprite = Right;
+            sr.sprite = Right;
         }
     }
 }
