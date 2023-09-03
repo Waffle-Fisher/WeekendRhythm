@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2893059053689243044}
   - component: {fileID: 4131542106705043226}
   m_Layer: 0
-  m_Name: Down Arrow
+  m_Name: Down Beat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
