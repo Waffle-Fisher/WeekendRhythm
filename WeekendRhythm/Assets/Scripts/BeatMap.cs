@@ -5,16 +5,17 @@ using UnityEngine;
 
 public class BeatMap : MonoBehaviour
 {
+    public static BeatMap Instance { get; private set; }
     public enum Direction {Up, Down, Left, Right, None};
     
     [System.Serializable]
     public struct Beat{
         [Min(0)]
         [SerializeField]
-        float timeOccursAt;
+        public float timeOccursAt { get; private set; };
         
         [SerializeField]
-        public Direction direction;
+        public Direction direction { get; private set;};
     }
 
     [Header("BeatTypes")]
@@ -44,39 +45,45 @@ public class BeatMap : MonoBehaviour
     private float timeSinceStart = 0f;
     float distance;
     int curBeat = 0;
-    void Start()
+    
+    void Awake()
     {
-        if (beats == null){ Debug.LogError("No Beats"); return;}
-        beatObjects = new List<Transform>();
-        GetComponentsInChildren<Transform>(true, beatObjects);
-        beatObjects.RemoveAt(0);
-        foreach(Transform t in beatObjects){ t.gameObject.SetActive(false);}
-        if(beats.Count > beatObjects.Count){ Debug.LogError("Not enough beats"); return;}
-        beatObjects.RemoveRange(beats.Count,beatObjects.Count - beats.Count);
-        for(int i = 0; i < beats.Count; i++)
-        {
-            ChangeSprite(beatObjects[i].GetComponent<SpriteRenderer>(), beats[i].direction);
-        }
-        distance = spawnPos.x - endPos.x;
-
-        beatObjects[0].gameObject.SetActive(true);
-        beatObjects[0].position = spawnPos;
+        if(Instance == null) { Instance = this; }
+        else { Destroy(gameObject); }
     }
 
-    // Update is called once per frame
+    void Start()
+    {
+        InitializeBeatsAndBeatObjects();
+    }
+
     void Update()
     {
         timeSinceStart += Time.deltaTime;
-       
-        MoveBeat(beatObjects[0]);
+        if(timeSinceStart >= beats[curBeat].timeOccursAt - timeOffset)
+        {
+            //MoveBeat(beatObjects[curBeat])
+        }
+        //MoveBeat(beatObjects[0]);
         //for next 5(?) beats
         //check if they should spawn in
         //if they should spawn them and start moving them to other side of screen
     }
 
-    void FixedUpdate()
+    private void InitializeBeatsAndBeatObjects()
     {
-
+        if (beats == null) { Debug.LogError("No Beats"); return; }
+        beatObjects = new List<Transform>();
+        GetComponentsInChildren<Transform>(true, beatObjects);
+        beatObjects.RemoveAt(0);
+        foreach (Transform t in beatObjects) { t.gameObject.SetActive(false); }
+        if (beats.Count > beatObjects.Count) { Debug.LogError("Not enough beats"); return; }
+        beatObjects.RemoveRange(beats.Count, beatObjects.Count - beats.Count);
+        for (int i = 0; i < beats.Count; i++)
+        {
+            ChangeSprite(beatObjects[i].GetComponent<SpriteRenderer>(), beats[i].direction);
+        }
+        distance = spawnPos.x - endPos.x;
     }
 
     void ChangeSprite(SpriteRenderer sr, Direction d)
@@ -98,6 +105,7 @@ public class BeatMap : MonoBehaviour
             sr.sprite = Right;
         }
     }
+    
     void MoveBeat(Transform t){
         float speed = (spawnPos.x - detectorPos.x) / timeOffset;
         t.Translate(speed * Time.deltaTime * Vector2.left);
