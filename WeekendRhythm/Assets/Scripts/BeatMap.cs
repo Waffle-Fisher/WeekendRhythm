@@ -31,14 +31,16 @@ public class BeatMap : MonoBehaviour
     private List<Beat> beats;
     List<Transform> beatObjects;
     [Header("Settings")]
-    [SerializeField][Min(0)][Tooltip("How long it should take the beat to move from spawn to beatdetector")]
-    private float timeOffset;
     [SerializeField]
     private Vector3 spawnPos = new Vector3(6, 0, 0);
     [SerializeField]
     private Vector3 endPos = new Vector3(-6, 0, 0);
     [SerializeField]
     private Vector3 detectorPos = new Vector3(-4, 0, 0);
+    [SerializeField][Min(0)][Tooltip("How long it should take the beat to move from spawn to beatdetector")]
+    private float timeOffset;
+    [SerializeField][Min(0)][Tooltip("Delay between game start and when the song starts playing")]
+    private float startDelay;
     private float timeSinceStart = 0f;
     float distance;
     int curBeat = 0;
