@@ -278,6 +278,10 @@ MonoBehaviour:
     direction: 3
   - timeOccursAt: 0
     direction: 0
+  timeOffset: 12
+  spawnPos: {x: 6, y: 0, z: 0}
+  endPos: {x: 0, y: 0, z: 0}
+  detectorPos: {x: -4, y: 0, z: 0}
 --- !u!1 &224440386
 GameObject:
   m_ObjectHideFlags: 0
@@ -1533,7 +1537,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.5566038, g: 0.5566038, b: 0.5566038, a: 1}
+  m_Color: {r: 0.34685266, g: 1, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -1617,7 +1621,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.5566038, g: 0.5566038, b: 0.5566038, a: 1}
+  m_Color: {r: 1, g: 0.09470569, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
