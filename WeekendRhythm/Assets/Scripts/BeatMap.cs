@@ -44,9 +44,11 @@ public class BeatMap : MonoBehaviour
     private float startDelay;
 
     public float TimeSinceStart { get; private set; } = 0f;
-    public int CurBeat { get; private set; } = 0;
+    public int CurrentBeatIndex { get; private set; } = 0;
 
     private int LatestBeat = 0;
+
+    public Beat CurrentBeat { get; private set; }
 
     void Awake()
     {
@@ -60,6 +62,11 @@ public class BeatMap : MonoBehaviour
         beatObjects[0].gameObject.SetActive(true);
     }
 
+    private void Update()
+    {
+        CurrentBeat = beats[CurrentBeatIndex];
+    }
+
     void FixedUpdate()
     {
         TimeSinceStart += Time.fixedDeltaTime;
@@ -67,13 +74,13 @@ public class BeatMap : MonoBehaviour
         {
             LatestBeat++;
         }
-        for (int i = CurBeat; i < LatestBeat; i++)
+        for (int i = CurrentBeatIndex; i < LatestBeat; i++)
         {
             if (!beatObjects[i].gameObject.activeSelf) { beatObjects[i].gameObject.SetActive(true); }
             MoveBeat(beatObjects[i]);
         }
-        Debug.Log("Time: " + TimeSinceStart + "\n");
-        Debug.Log("CurBeat: " + CurBeat + "\n" + "LatestBeat: " + LatestBeat + "\n");
+        //Debug.Log("Time: " + TimeSinceStart + "\n");
+        //Debug.Log("CurBeat: " + CurrentBeatIndex + "\n" + "LatestBeat: " + LatestBeat + "\n");
     }
 
     private void InitializeBeatsAndBeatObjects()
@@ -90,7 +97,6 @@ public class BeatMap : MonoBehaviour
             ChangeSprite(beatObjects[i].GetComponent<SpriteRenderer>(), beats[i].direction);
         }
     }
-
     void ChangeSprite(SpriteRenderer sr, Direction d)
     {
         if(d == Direction.Up)
@@ -115,6 +121,15 @@ public class BeatMap : MonoBehaviour
         float speed = (spawnPos.x - detectorPos.x) / timeOffset;
         t.Translate(speed * Time.deltaTime * Vector2.left);
     }
+
+    public void IncrementCurrentBeat()
+    {
+        beatObjects[CurrentBeatIndex].gameObject.SetActive(false);
+        if(CurrentBeatIndex + 1 >= beatObjects.Count) { return; }
+        CurrentBeatIndex++;
+        CurrentBeat = beats[CurrentBeatIndex];
+    }
+
 
     private void OnDrawGizmos()
     {
