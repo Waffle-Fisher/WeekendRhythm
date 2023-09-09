@@ -6,16 +6,16 @@ using UnityEngine;
 public class BeatMap : MonoBehaviour
 {
     public static BeatMap Instance { get; private set; }
-    public enum Direction {Up, Down, Left, Right, None};
-    
+    public enum Direction { Up, Down, Left, Right, None };
+
     [System.Serializable]
-    public struct Beat{
+    public struct Beat {
         [Min(0)]
         [SerializeField]
-        public float timeOccursAt { get; private set; };
-        
+        public float timeOccursAt;// { get; private set };
+
         [SerializeField]
-        public Direction direction { get; private set;};
+        public Direction direction;// { get; private set};
     }
 
     [Header("BeatTypes")]
@@ -28,7 +28,7 @@ public class BeatMap : MonoBehaviour
     [SerializeField]
     Sprite Right;
     [Space(8)]
-    [SerializeField] 
+    [SerializeField]
     private List<Beat> beats;
     List<Transform> beatObjects;
     [Header("Settings")]
@@ -42,10 +42,12 @@ public class BeatMap : MonoBehaviour
     private float timeOffset;
     [SerializeField][Min(0)][Tooltip("Delay between game start and when the song starts playing")]
     private float startDelay;
-    private float timeSinceStart = 0f;
-    float distance;
-    int curBeat = 0;
-    
+
+    public float TimeSinceStart { get; private set; } = 0f;
+    public int CurBeat { get; private set; } = 0;
+
+    private int LatestBeat = 0;
+
     void Awake()
     {
         if(Instance == null) { Instance = this; }
@@ -55,19 +57,23 @@ public class BeatMap : MonoBehaviour
     void Start()
     {
         InitializeBeatsAndBeatObjects();
+        beatObjects[0].gameObject.SetActive(true);
     }
 
-    void Update()
+    void FixedUpdate()
     {
-        timeSinceStart += Time.deltaTime;
-        if(timeSinceStart >= beats[curBeat].timeOccursAt - timeOffset)
+        TimeSinceStart += Time.fixedDeltaTime;
+        while (LatestBeat < beats.Count && beats[LatestBeat].timeOccursAt <= TimeSinceStart)
         {
-            //MoveBeat(beatObjects[curBeat])
+            LatestBeat++;
         }
-        //MoveBeat(beatObjects[0]);
-        //for next 5(?) beats
-        //check if they should spawn in
-        //if they should spawn them and start moving them to other side of screen
+        for (int i = CurBeat; i < LatestBeat; i++)
+        {
+            if (!beatObjects[i].gameObject.activeSelf) { beatObjects[i].gameObject.SetActive(true); }
+            MoveBeat(beatObjects[i]);
+        }
+        Debug.Log("Time: " + TimeSinceStart + "\n");
+        Debug.Log("CurBeat: " + CurBeat + "\n" + "LatestBeat: " + LatestBeat + "\n");
     }
 
     private void InitializeBeatsAndBeatObjects()
@@ -83,7 +89,6 @@ public class BeatMap : MonoBehaviour
         {
             ChangeSprite(beatObjects[i].GetComponent<SpriteRenderer>(), beats[i].direction);
         }
-        distance = spawnPos.x - endPos.x;
     }
 
     void ChangeSprite(SpriteRenderer sr, Direction d)
@@ -109,5 +114,15 @@ public class BeatMap : MonoBehaviour
     void MoveBeat(Transform t){
         float speed = (spawnPos.x - detectorPos.x) / timeOffset;
         t.Translate(speed * Time.deltaTime * Vector2.left);
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawCube(spawnPos, Vector3.one * 0.1f);
+        Gizmos.color = Color.red;
+        Gizmos.DrawCube(endPos, Vector3.one * 0.1f);
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawCube(Vector3.zero, Vector3.one * 0.1f);
     }
 }
