@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -59,7 +60,6 @@ public class BeatMap : MonoBehaviour
     void Start()
     {
         InitializeBeatsAndBeatObjects();
-        beatObjects[0].gameObject.SetActive(true);
     }
 
     private void Update()
@@ -120,6 +120,13 @@ public class BeatMap : MonoBehaviour
     void MoveBeat(Transform t){
         float speed = (spawnPos.x - detectorPos.x) / timeOffset;
         t.Translate(speed * Time.deltaTime * Vector2.left);
+        if (t.position.x <= detectorPos.x)
+        {
+            IncrementCurrentBeat();
+            PlayerInput.Instance.HideZeroGradeDisplayTimer();
+            BeatGradeUpdater.Instance.UpdateText("Miss");
+            BeatGradeUpdater.Instance.ShowText();
+        }
     }
 
     public void IncrementCurrentBeat()
@@ -127,9 +134,14 @@ public class BeatMap : MonoBehaviour
         beatObjects[CurrentBeatIndex].gameObject.SetActive(false);
         if(CurrentBeatIndex + 1 >= beatObjects.Count) { return; }
         CurrentBeatIndex++;
+        BeatCountUpdater.Instance.UpdateText(CurrentBeatIndex);
         CurrentBeat = beats[CurrentBeatIndex];
     }
 
+    public float GetTimeDifference()
+    {
+        return CurrentBeat.timeOccursAt + timeOffset - TimeSinceStart;
+    }
 
     private void OnDrawGizmos()
     {
