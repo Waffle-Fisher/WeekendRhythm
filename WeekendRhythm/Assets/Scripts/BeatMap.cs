@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -17,6 +18,12 @@ public class BeatMap : MonoBehaviour
 
         [SerializeField]
         public Direction direction;// { get; private set};
+
+        public Beat(float time, Direction dir)
+        {
+            timeOccursAt = time;
+            direction = dir;
+        }
     }
 
     [Header("BeatTypes")]
@@ -30,8 +37,12 @@ public class BeatMap : MonoBehaviour
     Sprite Right;
     [Space(8)]
     [SerializeField]
-    private List<Beat> beats;
-    List<Transform> beatObjects;
+    private List<Beat> beats = new();
+    [SerializeField]
+    private int beatsPoolSize = 1;
+    [SerializeField]
+    private GameObject beatObject;
+    
     [Header("Settings")]
     [SerializeField]
     private Vector3 spawnPos = new Vector3(6, 0, 0);
@@ -43,6 +54,17 @@ public class BeatMap : MonoBehaviour
     private float timeOffset;
     [SerializeField][Min(0)][Tooltip("Delay between game start and when the song starts playing")]
     private float startDelay;
+
+    [SerializeField]
+    private bool randomizeBeatMap = false;
+    [SerializeField]
+    [Min(0)]
+    private float beatSpaceMin;
+    [SerializeField]
+    [Min(0)]
+    private float beatSpaceMax;
+
+    List<GameObject> beatObjectPool;
 
     public float TimeSinceStart { get; private set; } = 0f;
     public int CurrentBeatIndex { get; private set; } = 0;
@@ -59,7 +81,12 @@ public class BeatMap : MonoBehaviour
 
     void Start()
     {
-        InitializeBeatsAndBeatObjects();
+        if(beatSpaceMin > beatSpaceMax) { Debug.LogError("beatSpaceMin is greater than beatSpaceMax"); }
+        if(randomizeBeatMap)
+        {
+            RandomizeBeatMapping();
+        }
+        InitializeBeatObjectPool();
     }
 
     private void Update()
@@ -76,25 +103,29 @@ public class BeatMap : MonoBehaviour
         }
         for (int i = CurrentBeatIndex; i < LatestBeat; i++)
         {
-            if (!beatObjects[i].gameObject.activeSelf) { beatObjects[i].gameObject.SetActive(true); }
-            MoveBeat(beatObjects[i]);
+            int poolInd = i % beatsPoolSize;
+            if (!beatObjectPool[poolInd].activeSelf) { beatObjectPool[poolInd].SetActive(true); }
+            MoveBeat(beatObjectPool[i % beatsPoolSize]);
         }
-        //Debug.Log("Time: " + TimeSinceStart + "\n");
-        //Debug.Log("CurBeat: " + CurrentBeatIndex + "\n" + "LatestBeat: " + LatestBeat + "\n");
-    }
 
-    private void InitializeBeatsAndBeatObjects()
+        Debug.Log("Time: " + TimeSinceStart + "\n");
+        Debug.Log("CurBeat: " + CurrentBeatIndex + "\n" + "LatestBeat: " + LatestBeat + "\n");
+    }
+    private void RandomizeBeatMapping()
     {
-        if (beats == null) { Debug.LogError("No Beats"); return; }
-        beatObjects = new List<Transform>();
-        GetComponentsInChildren<Transform>(true, beatObjects);
-        beatObjects.RemoveAt(0);
-        foreach (Transform t in beatObjects) { t.gameObject.SetActive(false); }
-        if (beats.Count > beatObjects.Count) { Debug.LogError("Not enough beats"); return; }
-        beatObjects.RemoveRange(beats.Count, beatObjects.Count - beats.Count);
-        for (int i = 0; i < beats.Count; i++)
+        for(int i = 1; i < beats.Count; i++)
         {
-            ChangeSprite(beatObjects[i].GetComponent<SpriteRenderer>(), beats[i].direction);
+            beats[i] = new(beats[i-1].timeOccursAt + UnityEngine.Random.Range(beatSpaceMin, beatSpaceMax), (Direction)UnityEngine.Random.Range(0, 4));
+        }
+    }
+    private void InitializeBeatObjectPool()
+    {
+        beatObjectPool = new List<GameObject>();
+        for (int i = 0; i < beatsPoolSize; i++)
+        {
+            beatObjectPool.Add(Instantiate(beatObject, transform));
+            beatObjectPool[i].SetActive(false);
+            ChangeSprite(beatObjectPool[i].GetComponent<SpriteRenderer>(), beats[i].direction);
         }
     }
     void ChangeSprite(SpriteRenderer sr, Direction d)
@@ -117,10 +148,11 @@ public class BeatMap : MonoBehaviour
         }
     }
     
-    void MoveBeat(Transform t){
+    void MoveBeat(GameObject g){
+        
         float speed = (spawnPos.x - detectorPos.x) / timeOffset;
-        t.Translate(speed * Time.deltaTime * Vector2.left);
-        if (t.position.x <= detectorPos.x)
+        g.transform.Translate(speed * Time.deltaTime * Vector2.left);
+        if (g.transform.position.x <= detectorPos.x)
         {
             IncrementCurrentBeat();
             PlayerInput.Instance.HideZeroGradeDisplayTimer();
@@ -131,8 +163,8 @@ public class BeatMap : MonoBehaviour
 
     public void IncrementCurrentBeat()
     {
-        beatObjects[CurrentBeatIndex].gameObject.SetActive(false);
-        if(CurrentBeatIndex + 1 >= beatObjects.Count) { return; }
+        beatObjectPool[CurrentBeatIndex].SetActive(false);
+        if(CurrentBeatIndex + 1 >= beatObjectPool.Count) { return; }
         CurrentBeatIndex++;
         BeatCountUpdater.Instance.UpdateText(CurrentBeatIndex);
         CurrentBeat = beats[CurrentBeatIndex];

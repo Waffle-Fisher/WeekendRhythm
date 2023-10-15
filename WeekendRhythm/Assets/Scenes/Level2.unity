@@ -389,23 +389,23 @@ MonoBehaviour:
   Right: {fileID: 1643909027, guid: 15f33c2cbe781f94285313fbdcedb285, type: 3}
   beats:
   - timeOccursAt: 0
-    direction: 0
-  - timeOccursAt: 0.5
     direction: 1
-  - timeOccursAt: 1
-    direction: 2
+  - timeOccursAt: 0.2
+    direction: 0
+  - timeOccursAt: 0.3
+    direction: 1
   - timeOccursAt: 2
     direction: 3
   - timeOccursAt: 2.3
-    direction: 0
-  - timeOccursAt: 2.6
+    direction: 2
+  - timeOccursAt: 2.4
     direction: 0
   - timeOccursAt: 3
-    direction: 2
-  - timeOccursAt: 4.5
-    direction: 0
-  - timeOccursAt: 7
     direction: 3
+  - timeOccursAt: 4
+    direction: 0
+  - timeOccursAt: 5
+    direction: 1
   - timeOccursAt: 10
     direction: 0
   spawnPos: {x: 6, y: 0, z: 0}
@@ -2551,7 +2551,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0, g: 0.7160563, b: 0.745283, a: 0}
+  m_BackGroundColor: {r: 0.74509805, g: 0, b: 0.7046312, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
