@@ -70,7 +70,7 @@ public class PlayerInput : MonoBehaviour
         Debug.Log("Time Difference:" + timeDifferent);
         if(bguInstance.GetEnabled()){ bguInstance.HideText(); }
         if (timeDifferent > inputTimeRange) { bguInstance.UpdateText("Miss"); }
-        else if(GetInput() != BeatMap.Instance.CurrentBeat.Direction) { bguInstance.UpdateText("Wrong"); }
+        else if(GetInput() != BeatMap.Instance.CurrentBeat.direction) { bguInstance.UpdateText("Wrong"); }
         else if (timeDifferent < greatMargin) { bguInstance.UpdateText("Great");}
         else { bguInstance.UpdateText("Nice"); }
         bguInstance.ShowText();

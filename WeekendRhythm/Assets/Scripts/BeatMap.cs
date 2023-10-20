@@ -10,8 +10,6 @@ public class BeatMap : MonoBehaviour
 {
     public static BeatMap Instance { get; private set; }
     
-
-    [System.Serializable]
     //public struct Beat {
     //    [Min(0)]
     //    [SerializeField]
@@ -71,15 +69,16 @@ public class BeatMap : MonoBehaviour
 
     List<GameObject> beatObjectPool;
 
+    public enum Direction { Up, Down, Left, Right, None };
+
     public float TimeSinceStart { get; private set; } = 0f;
     public int CurrentBeatIndex { get; private set; } = 0;
+    public Beat CurrentBeat { get; private set; }
 
     private int LatestBeat = 0;
     private float LatestBeatTime = 0f;
-
     private float movementSpeed = -1f;
 
-    public Beat CurrentBeat { get; private set; }
     public void IncrementCurrentBeat()
     {
         beatObjectPool[CurrentBeatIndex].SetActive(false);
@@ -136,7 +135,7 @@ public class BeatMap : MonoBehaviour
                 float beatPosX = spawnPos.x + (totalBeatTimes + beats[i].TimeSinceLastBeat) * movementSpeed;
                 Vector3 beatPos = new(beatPosX, spawnPos.y, spawnPos.z);
                 beatObjectPool[poolInd].transform.position = beatPos;
-                beats[i].SetSpawned(true);
+                beats[i].spawned = true;
             }
             if (!beatObjectPool[poolInd].activeSelf) { beatObjectPool[poolInd].SetActive(true); }
             Debug.Log("Beat " + poolInd + " is now moving");
@@ -166,7 +165,7 @@ public class BeatMap : MonoBehaviour
         {
             beatObjectPool.Add(Instantiate(beatObject, transform));
             beatObjectPool[i].SetActive(false);
-            ChangeSprite(beatObjectPool[i].GetComponent<SpriteRenderer>(), beats[i].Direction);
+            ChangeSprite(beatObjectPool[i].GetComponent<SpriteRenderer>(), beats[i].direction);
         }
     }
     void ChangeSprite(SpriteRenderer sr, Direction d)
