@@ -306,22 +306,21 @@ MonoBehaviour:
   Left: {fileID: -329027365, guid: 15f33c2cbe781f94285313fbdcedb285, type: 3}
   Right: {fileID: 1643909027, guid: 15f33c2cbe781f94285313fbdcedb285, type: 3}
   beats:
-  - timeSinceLastBeat: 0
+  - TimeSinceLastBeat: 0
     direction: 0
-  - timeSinceLastBeat: 0.66
+  - TimeSinceLastBeat: 1
     direction: 1
-  - timeSinceLastBeat: 1.5
+  - TimeSinceLastBeat: 1
     direction: 0
-  - timeSinceLastBeat: 0.67
+  - TimeSinceLastBeat: 1
     direction: 1
-  - timeSinceLastBeat: 1.5
+  - TimeSinceLastBeat: 1
     direction: 0
-  beatsPoolSize: 10
   beatObject: {fileID: 8538593723776103261, guid: 9faf50423fda8e14b82282ce8dac87eb, type: 3}
   spawnPos: {x: 6, y: 0, z: 0}
   endPos: {x: -6, y: 0, z: 0}
   detectorPos: {x: -4.5, y: 0, z: 0}
-  timeOffset: 5
+  travelTime: 5
   startDelay: 0
   randomizeBeatMap: 0
   beatSpaceMin: 0
