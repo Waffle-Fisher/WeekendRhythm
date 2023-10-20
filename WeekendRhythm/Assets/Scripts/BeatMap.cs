@@ -9,23 +9,27 @@ using UnityEngine;
 public class BeatMap : MonoBehaviour
 {
     public static BeatMap Instance { get; private set; }
-    public enum Direction { Up, Down, Left, Right, None };
+    
 
     [System.Serializable]
-    public struct Beat {
-        [Min(0)]
-        [SerializeField]
-        public float timeSinceLastBeat;// { get; private set };
+    //public struct Beat {
+    //    [Min(0)]
+    //    [SerializeField]
+    //    public float timeSinceLastBeat;// { get; private set };
 
-        [SerializeField]
-        public Direction direction;// { get; private set};
+    //    [SerializeField]
+    //    public Direction direction;// { get; private set};
 
-        public Beat(float time, Direction dir)
-        {
-            timeSinceLastBeat = time;
-            direction = dir;
-        }
-    }
+    //    public bool spawned;
+    //    public Beat(float time, Direction dir)
+    //    {
+    //        timeSinceLastBeat = time;
+    //        direction = dir;
+    //        spawned = false;
+    //    }
+
+    //    public void SetSpawned(bool b) { spawned = b; }
+    //}
 
     [Header("BeatTypes")]
     [SerializeField]
@@ -71,8 +75,24 @@ public class BeatMap : MonoBehaviour
     public int CurrentBeatIndex { get; private set; } = 0;
 
     private int LatestBeat = 0;
+    private float LatestBeatTime = 0f;
+
+    private float movementSpeed = -1f;
 
     public Beat CurrentBeat { get; private set; }
+    public void IncrementCurrentBeat()
+    {
+        beatObjectPool[CurrentBeatIndex].SetActive(false);
+        if (CurrentBeatIndex + 1 >= beatObjectPool.Count) { return; }
+        CurrentBeatIndex++;
+        BeatCountUpdater.Instance.UpdateText(CurrentBeatIndex);
+        CurrentBeat = beats[CurrentBeatIndex];
+    }
+
+    public float GetTimeDifference()
+    {
+        return CurrentBeat.TimeSinceLastBeat + timeOffset - TimeSinceStart;
+    }
 
     void Awake()
     {
@@ -83,6 +103,8 @@ public class BeatMap : MonoBehaviour
     void Start()
     {
         if(beatSpaceMin > beatSpaceMax) { Debug.LogError("beatSpaceMin is greater than beatSpaceMax"); }
+        if(beatsPoolSize > beats.Count) { beatsPoolSize = beats.Count; }
+        movementSpeed = (spawnPos.x - detectorPos.x) / timeOffset;
         if(randomizeBeatMap)
         {
             RandomizeBeatMapping();
@@ -99,28 +121,44 @@ public class BeatMap : MonoBehaviour
     {
         TimeSinceStart += Time.fixedDeltaTime;
 
-
-        //while (LatestBeat < beats.Count && beats[LatestBeat].timeSinceLastBeat <= TimeSinceStart)
-        //{
-        //    LatestBeat++;
-        //}
-        //for (int i = CurrentBeatIndex; i < LatestBeat; i++)
-        //{
-        //    int poolInd = i % beatsPoolSize;
-        //    if (!beatObjectPool[poolInd].activeSelf) { beatObjectPool[poolInd].SetActive(true); }
-        //    MoveBeat(beatObjectPool[i % beatsPoolSize]);
-        //}
-
-        Debug.Log("Time: " + TimeSinceStart + "\n");
-        Debug.Log("CurBeat: " + CurrentBeatIndex + "\n" + "LatestBeat: " + LatestBeat + "\n");
-    }
-    private void RandomizeBeatMapping()
-    {
-        for(int i = 1; i < beats.Count; i++)
+        while (LatestBeat < beats.Count && LatestBeatTime <= TimeSinceStart - beats[LatestBeat].TimeSinceLastBeat)
         {
-            beats[i] = new(beats[i-1].timeSinceLastBeat + UnityEngine.Random.Range(beatSpaceMin, beatSpaceMax), (Direction)UnityEngine.Random.Range(0, 4));
+            LatestBeatTime += beats[LatestBeat].TimeSinceLastBeat;
+            LatestBeat++;
+        }
+        float totalBeatTimes = 0f;
+        for (int i = CurrentBeatIndex; i < LatestBeat; i++)
+        {
+            int poolInd = i % beatsPoolSize;
+            Debug.Log("Beat " + poolInd + " has spawned?: " + beats[i].spawned);
+            if (!beats[i].spawned)
+            {
+                float beatPosX = spawnPos.x + (totalBeatTimes + beats[i].TimeSinceLastBeat) * movementSpeed;
+                Vector3 beatPos = new(beatPosX, spawnPos.y, spawnPos.z);
+                beatObjectPool[poolInd].transform.position = beatPos;
+                beats[i].SetSpawned(true);
+            }
+            if (!beatObjectPool[poolInd].activeSelf) { beatObjectPool[poolInd].SetActive(true); }
+            Debug.Log("Beat " + poolInd + " is now moving");
+            MoveBeat(beatObjectPool[poolInd]);
+            totalBeatTimes += beats[i].TimeSinceLastBeat;
+        }
+
+        //Debug.Log("Time: " + TimeSinceStart + "\n");
+        //Debug.Log("CurBeat: " + CurrentBeatIndex + "\n" + "LatestBeat: " + LatestBeat + "\n");
+    }
+    void MoveBeat(GameObject g)
+    {
+        g.transform.Translate(movementSpeed * Time.deltaTime * Vector2.left);
+        if (g.transform.position.x <= detectorPos.x)
+        {
+            IncrementCurrentBeat();
+            PlayerInput.Instance.HideZeroGradeDisplayTimer();
+            BeatGradeUpdater.Instance.UpdateText("Miss");
+            BeatGradeUpdater.Instance.ShowText();
         }
     }
+
     private void InitializeBeatObjectPool()
     {
         beatObjectPool = new List<GameObject>();
@@ -128,7 +166,7 @@ public class BeatMap : MonoBehaviour
         {
             beatObjectPool.Add(Instantiate(beatObject, transform));
             beatObjectPool[i].SetActive(false);
-            ChangeSprite(beatObjectPool[i].GetComponent<SpriteRenderer>(), beats[i].direction);
+            ChangeSprite(beatObjectPool[i].GetComponent<SpriteRenderer>(), beats[i].Direction);
         }
     }
     void ChangeSprite(SpriteRenderer sr, Direction d)
@@ -150,32 +188,13 @@ public class BeatMap : MonoBehaviour
             sr.sprite = Right;
         }
     }
-    
-    void MoveBeat(GameObject g){
-        
-        float speed = (spawnPos.x - detectorPos.x) / timeOffset;
-        g.transform.Translate(speed * Time.deltaTime * Vector2.left);
-        if (g.transform.position.x <= detectorPos.x)
+
+    private void RandomizeBeatMapping()
+    {
+        for (int i = 1; i < beats.Count; i++)
         {
-            IncrementCurrentBeat();
-            PlayerInput.Instance.HideZeroGradeDisplayTimer();
-            BeatGradeUpdater.Instance.UpdateText("Miss");
-            BeatGradeUpdater.Instance.ShowText();
+            beats[i] = new(beats[i - 1].TimeSinceLastBeat + UnityEngine.Random.Range(beatSpaceMin, beatSpaceMax), (Direction)UnityEngine.Random.Range(0, 4));
         }
-    }
-
-    public void IncrementCurrentBeat()
-    {
-        beatObjectPool[CurrentBeatIndex].SetActive(false);
-        if(CurrentBeatIndex + 1 >= beatObjectPool.Count) { return; }
-        CurrentBeatIndex++;
-        BeatCountUpdater.Instance.UpdateText(CurrentBeatIndex);
-        CurrentBeat = beats[CurrentBeatIndex];
-    }
-
-    public float GetTimeDifference()
-    {
-        return CurrentBeat.timeSinceLastBeat + timeOffset - TimeSinceStart;
     }
 
     private void OnDrawGizmos()
@@ -187,11 +206,13 @@ public class BeatMap : MonoBehaviour
         Gizmos.color = Color.yellow;
         Gizmos.DrawCube(Vector3.zero, Vector3.one * 0.1f);
 
-        UnityEditor.Handles.color = Color.blue;
+        float totalBeatTimes = 0f;
         for(int i = 0; i < beats.Count; i++)
         {
-            Vector3 beatPos = new(endPos.x + beats[i].timeSinceLastBeat * (spawnPos.x - detectorPos.x) / timeOffset, spawnPos.y, spawnPos.z);
+            UnityEditor.Handles.color = (i % 2 == 0) ? Color.blue : Color.yellow;
+            Vector3 beatPos = new(spawnPos.x + (totalBeatTimes + beats[i].TimeSinceLastBeat) * (spawnPos.x - detectorPos.x) / timeOffset, spawnPos.y, spawnPos.z);
             UnityEditor.Handles.DrawSolidDisc(beatPos, Vector3.back, 0.1f);
+            totalBeatTimes += beats[i].TimeSinceLastBeat;
         }
     }
 }

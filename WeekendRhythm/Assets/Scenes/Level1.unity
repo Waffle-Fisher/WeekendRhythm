@@ -308,44 +308,14 @@ MonoBehaviour:
   beats:
   - timeSinceLastBeat: 0
     direction: 0
-  - timeSinceLastBeat: 0
-    direction: 2
-  - timeSinceLastBeat: 0
-    direction: 2
-  - timeSinceLastBeat: 0
+  - timeSinceLastBeat: 0.66
     direction: 1
-  - timeSinceLastBeat: 0
-    direction: 3
-  - timeSinceLastBeat: 0
+  - timeSinceLastBeat: 1.5
     direction: 0
-  - timeSinceLastBeat: 0
-    direction: 2
-  - timeSinceLastBeat: 0
+  - timeSinceLastBeat: 0.67
+    direction: 1
+  - timeSinceLastBeat: 1.5
     direction: 0
-  - timeSinceLastBeat: 0
-    direction: 1
-  - timeSinceLastBeat: 0
-    direction: 3
-  - timeSinceLastBeat: 0
-    direction: 2
-  - timeSinceLastBeat: 0
-    direction: 1
-  - timeSinceLastBeat: 0
-    direction: 0
-  - timeSinceLastBeat: 0
-    direction: 1
-  - timeSinceLastBeat: 0
-    direction: 2
-  - timeSinceLastBeat: 0
-    direction: 3
-  - timeSinceLastBeat: 0
-    direction: 2
-  - timeSinceLastBeat: 0
-    direction: 1
-  - timeSinceLastBeat: 0
-    direction: 0
-  - timeSinceLastBeat: 0
-    direction: 1
   beatsPoolSize: 10
   beatObject: {fileID: 8538593723776103261, guid: 9faf50423fda8e14b82282ce8dac87eb, type: 3}
   spawnPos: {x: 6, y: 0, z: 0}
