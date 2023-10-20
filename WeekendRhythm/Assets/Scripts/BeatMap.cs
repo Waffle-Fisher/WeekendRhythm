@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 public class BeatMap : MonoBehaviour
@@ -14,14 +15,14 @@ public class BeatMap : MonoBehaviour
     public struct Beat {
         [Min(0)]
         [SerializeField]
-        public float timeOccursAt;// { get; private set };
+        public float timeSinceLastBeat;// { get; private set };
 
         [SerializeField]
         public Direction direction;// { get; private set};
 
         public Beat(float time, Direction dir)
         {
-            timeOccursAt = time;
+            timeSinceLastBeat = time;
             direction = dir;
         }
     }
@@ -97,7 +98,7 @@ public class BeatMap : MonoBehaviour
     void FixedUpdate()
     {
         TimeSinceStart += Time.fixedDeltaTime;
-        while (LatestBeat < beats.Count && beats[LatestBeat].timeOccursAt <= TimeSinceStart)
+        while (LatestBeat < beats.Count && beats[LatestBeat].timeSinceLastBeat <= TimeSinceStart)
         {
             LatestBeat++;
         }
@@ -115,7 +116,7 @@ public class BeatMap : MonoBehaviour
     {
         for(int i = 1; i < beats.Count; i++)
         {
-            beats[i] = new(beats[i-1].timeOccursAt + UnityEngine.Random.Range(beatSpaceMin, beatSpaceMax), (Direction)UnityEngine.Random.Range(0, 4));
+            beats[i] = new(beats[i-1].timeSinceLastBeat + UnityEngine.Random.Range(beatSpaceMin, beatSpaceMax), (Direction)UnityEngine.Random.Range(0, 4));
         }
     }
     private void InitializeBeatObjectPool()
@@ -172,7 +173,7 @@ public class BeatMap : MonoBehaviour
 
     public float GetTimeDifference()
     {
-        return CurrentBeat.timeOccursAt + timeOffset - TimeSinceStart;
+        return CurrentBeat.timeSinceLastBeat + timeOffset - TimeSinceStart;
     }
 
     private void OnDrawGizmos()
@@ -183,5 +184,12 @@ public class BeatMap : MonoBehaviour
         Gizmos.DrawCube(endPos, Vector3.one * 0.1f);
         Gizmos.color = Color.yellow;
         Gizmos.DrawCube(Vector3.zero, Vector3.one * 0.1f);
+
+        UnityEditor.Handles.color = Color.blue;
+        for(int i = 0; i < beats.Count; i++)
+        {
+            Vector3 beatPos = new(endPos.x + beats[i].timeSinceLastBeat * (spawnPos.x - detectorPos.x) / timeOffset, spawnPos.y, spawnPos.z);
+            UnityEditor.Handles.DrawSolidDisc(beatPos, Vector3.back, 0.1f);
+        }
     }
 }

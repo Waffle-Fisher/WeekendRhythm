@@ -308,24 +308,44 @@ MonoBehaviour:
   beats:
   - timeOccursAt: 0
     direction: 0
-  - timeOccursAt: 0
+  - timeOccursAt: 2
+    direction: 2
+  - timeOccursAt: 3
+    direction: 2
+  - timeOccursAt: 4
+    direction: 1
+  - timeOccursAt: 5
+    direction: 3
+  - timeOccursAt: 6
     direction: 0
-  - timeOccursAt: 0
+  - timeOccursAt: 7
+    direction: 2
+  - timeOccursAt: 8
     direction: 0
-  - timeOccursAt: 0
+  - timeOccursAt: 10
+    direction: 1
+  - timeOccursAt: 12
+    direction: 3
+  - timeOccursAt: 13
+    direction: 2
+  - timeOccursAt: 15
+    direction: 1
+  - timeOccursAt: 17
     direction: 0
-  - timeOccursAt: 0
+  - timeOccursAt: 18
+    direction: 1
+  - timeOccursAt: 20
+    direction: 2
+  - timeOccursAt: 21
+    direction: 3
+  - timeOccursAt: 22
+    direction: 2
+  - timeOccursAt: 23
+    direction: 1
+  - timeOccursAt: 25
     direction: 0
-  - timeOccursAt: 0
-    direction: 0
-  - timeOccursAt: 0
-    direction: 0
-  - timeOccursAt: 0
-    direction: 0
-  - timeOccursAt: 0
-    direction: 0
-  - timeOccursAt: 0
-    direction: 0
+  - timeOccursAt: 28
+    direction: 1
   beatsPoolSize: 10
   beatObject: {fileID: 8538593723776103261, guid: 9faf50423fda8e14b82282ce8dac87eb, type: 3}
   spawnPos: {x: 6, y: 0, z: 0}
@@ -333,8 +353,9 @@ MonoBehaviour:
   detectorPos: {x: -4.5, y: 0, z: 0}
   timeOffset: 5
   startDelay: 0
-  randomizeBeatMap: 1
-  beatSpaceRange: {x: 1, y: 5}
+  randomizeBeatMap: 0
+  beatSpaceMin: 0
+  beatSpaceMax: 0
 --- !u!23 &158581339
 MeshRenderer:
   m_ObjectHideFlags: 0
