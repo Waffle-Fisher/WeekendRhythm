@@ -59,10 +59,10 @@ public class PlayerInput : MonoBehaviour
             }
         }
         if (!input.WasPressedThisFrame()) { return; }
-        float timeDifferent = BeatMap.Instance.GetTimeDifference();
+        float timeDifference = BeatMap.Instance.GetTimeDifference();
         //Debug.Log("Time Difference: " + timeDifferent);
-        if (timeDifferent > inputTimeRange) { return; }
-        GradeHit(timeDifferent);
+        if (timeDifference > inputTimeRange) { return; }
+        GradeHit(timeDifference);
     }
 
     private void GradeHit(float timeDifferent)
