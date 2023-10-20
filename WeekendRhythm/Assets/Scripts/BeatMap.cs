@@ -98,16 +98,18 @@ public class BeatMap : MonoBehaviour
     void FixedUpdate()
     {
         TimeSinceStart += Time.fixedDeltaTime;
-        while (LatestBeat < beats.Count && beats[LatestBeat].timeSinceLastBeat <= TimeSinceStart)
-        {
-            LatestBeat++;
-        }
-        for (int i = CurrentBeatIndex; i < LatestBeat; i++)
-        {
-            int poolInd = i % beatsPoolSize;
-            if (!beatObjectPool[poolInd].activeSelf) { beatObjectPool[poolInd].SetActive(true); }
-            MoveBeat(beatObjectPool[i % beatsPoolSize]);
-        }
+
+
+        //while (LatestBeat < beats.Count && beats[LatestBeat].timeSinceLastBeat <= TimeSinceStart)
+        //{
+        //    LatestBeat++;
+        //}
+        //for (int i = CurrentBeatIndex; i < LatestBeat; i++)
+        //{
+        //    int poolInd = i % beatsPoolSize;
+        //    if (!beatObjectPool[poolInd].activeSelf) { beatObjectPool[poolInd].SetActive(true); }
+        //    MoveBeat(beatObjectPool[i % beatsPoolSize]);
+        //}
 
         Debug.Log("Time: " + TimeSinceStart + "\n");
         Debug.Log("CurBeat: " + CurrentBeatIndex + "\n" + "LatestBeat: " + LatestBeat + "\n");
