@@ -4,19 +4,16 @@ using UnityEngine;
 
 public class Beat : MonoBehaviour
 {
-    public enum DirectionOptions { Up, Down, Left, Right, None };
+    public BeatMap.Direction direction;
 
     public float TimeSinceLastBeat { get; private set; }
 
-    public DirectionOptions Direction { get; private set; }
-
     public bool spawned;
-    public Beat(float time, DirectionOptions dir)
-    {
-        TimeSinceLastBeat = time;
-        Direction = dir;
-        spawned = false;
-    }
 
-    public void SetSpawned(bool b) { spawned = b; }
+    public Beat(BeatMap.Direction direction, float timeSinceLastBeat, bool spawned)
+    {
+        this.direction = direction;
+        this.TimeSinceLastBeat = timeSinceLastBeat;
+        this.spawned = spawned;
+    }
 }
