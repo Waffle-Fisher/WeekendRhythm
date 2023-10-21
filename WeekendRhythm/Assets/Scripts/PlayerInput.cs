@@ -15,7 +15,7 @@ public class PlayerInput : MonoBehaviour
     float greatMargin = 0.5f;
     [SerializeField]
     [Tooltip("How far, in seconds, a beat can be detected. Must be greater than greatMargin")]
-    float inputTimeRange = 2f;
+    float inputDistanceRange = 2f;
     [SerializeField]
     [Tooltip("How long the grade should stay on the screen")]
     float GradeDisplayLength = 1f;
@@ -42,10 +42,25 @@ public class PlayerInput : MonoBehaviour
     private void Start()
     {
         bguInstance = BeatGradeUpdater.Instance;
-        if (inputTimeRange < greatMargin) { Debug.LogError("inputTimeRange is smaller than greatMargin"); }
+        if (inputDistanceRange < greatMargin) { Debug.LogError("inputTimeRange is smaller than greatMargin"); }
     }
 
     void Update()
+    {
+        ProcessGrade();
+    }
+
+    private void ProcessGrade()
+    {
+        RemoveGradeText();
+        if (!input.WasPressedThisFrame()) { return; }
+        float distanceDifference = BeatMap.Instance.GetDistanceDifference();
+        if (distanceDifference > inputDistanceRange) { return; }
+        ScoreGradeHit(distanceDifference);
+        BeatMap.Instance.IncrementCurrentBeat();
+    }
+
+    private void RemoveGradeText()
     {
         if (bguInstance.GetEnabled())
         {
@@ -58,23 +73,17 @@ public class PlayerInput : MonoBehaviour
                 GradeDisplayTimer += Time.deltaTime;
             }
         }
-        if (!input.WasPressedThisFrame()) { return; }
-        float timeDifference = BeatMap.Instance.GetTimeDifference();
-        //Debug.Log("Time Difference: " + timeDifferent);
-        if (timeDifference > inputTimeRange) { return; }
-        GradeHit(timeDifference);
     }
 
-    private void GradeHit(float timeDifferent)
+    private void ScoreGradeHit(float distDif)
     {
-        Debug.Log("Time Difference:" + timeDifferent);
+        Debug.Log("Distance Difference:" + distDif);
         if(bguInstance.GetEnabled()){ bguInstance.HideText(); }
-        if (timeDifferent > inputTimeRange) { bguInstance.UpdateText("Miss"); }
+        if (distDif > inputDistanceRange) { bguInstance.UpdateText("Miss"); }
         else if(GetInput() != BeatMap.Instance.CurrentBeat.direction) { bguInstance.UpdateText("Wrong"); }
-        else if (timeDifferent < greatMargin) { bguInstance.UpdateText("Great");}
+        else if (distDif < greatMargin) { bguInstance.UpdateText("Great");}
         else { bguInstance.UpdateText("Nice"); }
         bguInstance.ShowText();
-        BeatMap.Instance.IncrementCurrentBeat();
     }
 
     BeatMap.Direction GetInput()
@@ -91,5 +100,13 @@ public class PlayerInput : MonoBehaviour
         bguInstance.HideText();
         GradeDisplayTimer = 0f;
     }
-    
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawLine(new Vector2(transform.position.x + inputDistanceRange, 10), new Vector2(transform.position.x + inputDistanceRange, -10));
+        Gizmos.color = Color.green;
+        Gizmos.DrawLine(new Vector2(transform.position.x + greatMargin, 10), new Vector2(transform.position.x + greatMargin, -10));
+    }
+
 }
