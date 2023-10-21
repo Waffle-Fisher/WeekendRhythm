@@ -91,13 +91,14 @@ public class BeatMap : MonoBehaviour
             RandomizeBeatMapping();
         }
         InitializeBeatObjectPool();
+        StartCoroutine(JukeboxController.Instance.PlaySong(startDelay));
     }
 
     void FixedUpdate()
     {
         TimeSinceStart += Time.fixedDeltaTime;
 
-        while (LatestBeatInd < beats.Count && LatestBeatTime <= TimeSinceStart - beats[LatestBeatInd].TimeSinceLastBeat)
+        while (LatestBeatInd < beats.Count && LatestBeatTime <= TimeSinceStart - startDelay - beats[LatestBeatInd].TimeSinceLastBeat)
         {
             LatestBeatTime += beats[LatestBeatInd].TimeSinceLastBeat;
             LatestBeatInd++;
