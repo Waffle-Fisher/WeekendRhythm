@@ -23,6 +23,7 @@ public class PlayerInput : MonoBehaviour
     float GradeDisplayTimer = 0f;
 
     BeatGradeUpdater bguInstance;
+    private PlayerSFX pSFX;
     void OnEnable()
     {
         input.Enable();
@@ -41,8 +42,9 @@ public class PlayerInput : MonoBehaviour
 
     private void Start()
     {
-        bguInstance = BeatGradeUpdater.Instance;
         if (inputDistanceRange < greatMargin) { Debug.LogError("inputTimeRange is smaller than greatMargin"); }
+        bguInstance = BeatGradeUpdater.Instance;
+        pSFX = GetComponent<PlayerSFX>();
     }
 
     void Update()
@@ -54,6 +56,7 @@ public class PlayerInput : MonoBehaviour
     {
         RemoveGradeText();
         if (!input.WasPressedThisFrame()) { return; }
+        pSFX.PlayAudioClip(1);
         float distanceDifference = BeatMap.Instance.GetDistanceDifference();
         if (distanceDifference > inputDistanceRange) { return; }
         ScoreGradeHit(distanceDifference);

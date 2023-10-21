@@ -2388,6 +2388,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1527015196}
   - component: {fileID: 1527015195}
+  - component: {fileID: 1527015198}
   - component: {fileID: 1527015197}
   m_Layer: 0
   m_Name: BeatDetector
@@ -2612,6 +2613,20 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1527015198
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1527015194}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 247ff6640a84d6540aed563e32b464ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AudioClipList:
+  - {fileID: 8300000, guid: 52cf833fb79bcb44cb7ae49c05ef4af3, type: 3}
 --- !u!1 &1679620299
 GameObject:
   m_ObjectHideFlags: 0
