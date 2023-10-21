@@ -63,34 +63,16 @@ public class BeatMap : MonoBehaviour
     private float beatSpaceMax;
 
     private List<GameObject> beatObjects;
-
-    public enum Direction { Up, Down, Left, Right, None };
-
-    public float TimeSinceStart { get; private set; } = 0f;
-    public Beat CurrentBeat { get; private set; }
-
     private Vector3 detectorPos = new Vector3(-4, 0, 0);
     private int CurrentBeatIndex = 0;
     private int LatestBeatInd = 0;
     private float LatestBeatTime = 0f;
     private float movementSpeed = 0f; // units per second
 
-    public void IncrementCurrentBeat()
-    {
-        beatObjects[CurrentBeatIndex].SetActive(false);
-        if (CurrentBeatIndex + 1 >= beatObjects.Count) { return; }
-        CurrentBeatIndex++;
-        BeatCountUpdater.Instance.UpdateText(CurrentBeatIndex);
-        CurrentBeat = beats[CurrentBeatIndex];
-    }
+    public enum Direction { Up, Down, Left, Right, None };
 
-    public float GetDistanceDifference()
-    {
-        float delta = beatObjects[CurrentBeatIndex].transform.position.x - detectorPos.x;
-        //Debug.Log("Current Beat Pos: " + beatObjects[CurrentBeatIndex].transform.position);
-        //Debug.Log("Difference between detector and beat " + CurrentBeatIndex + ": " + delta);
-        return delta;
-    }
+    public float TimeSinceStart { get; private set; } = 0f;
+    public Beat CurrentBeat { get; private set; }
 
     void Awake()
     {
@@ -137,6 +119,24 @@ public class BeatMap : MonoBehaviour
         //Debug.Log("Time: " + TimeSinceStart + "\n");
         //Debug.Log("CurBeat: " + CurrentBeatIndex + "\n" + "LatestBeat: " + LatestBeat + "\n");
     }
+
+    public void IncrementCurrentBeat()
+    {
+        beatObjects[CurrentBeatIndex].SetActive(false);
+        if (CurrentBeatIndex + 1 >= beatObjects.Count) { return; }
+        CurrentBeatIndex++;
+        BeatCountUpdater.Instance.UpdateText(CurrentBeatIndex);
+        CurrentBeat = beats[CurrentBeatIndex];
+    }
+
+    public float GetDistanceDifference()
+    {
+        float delta = beatObjects[CurrentBeatIndex].transform.position.x - detectorPos.x;
+        //Debug.Log("Current Beat Pos: " + beatObjects[CurrentBeatIndex].transform.position);
+        //Debug.Log("Difference between detector and beat " + CurrentBeatIndex + ": " + delta);
+        return delta;
+    }
+
     void MoveBeat(GameObject g)
     {
         g.transform.Translate(movementSpeed * Time.deltaTime * Vector2.left);
