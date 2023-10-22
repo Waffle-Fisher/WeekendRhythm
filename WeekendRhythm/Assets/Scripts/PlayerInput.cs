@@ -54,13 +54,14 @@ public class PlayerInput : MonoBehaviour
 
     void Update()
     {
-        ProcessGrade();
+        RemoveGradeText();
+        if (input.WasPressedThisFrame()) {
+            ProcessGrade();
+        }
     }
 
     private void ProcessGrade()
     {
-        RemoveGradeText();
-        if (!input.WasPressedThisFrame()) { return; }
         pSFX.PlayAudioClip(AudioClipIndex);
         float distanceDifference = BeatMapHandler.Instance.GetDistanceDifference();
         if (distanceDifference > inputDistanceRange) { return; }
