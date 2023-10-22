@@ -21,6 +21,6 @@ public class JukeboxController : MonoBehaviour
     public IEnumerator PlaySong(float delay)
     {
         yield return new WaitForSeconds(delay);
-        m_AudioSource.Play();
+        m_AudioSource.PlayOneShot(m_AudioSource.clip);
     }
 }
