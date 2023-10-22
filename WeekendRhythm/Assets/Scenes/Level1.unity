@@ -364,8 +364,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 158581340}
-  - component: {fileID: 158581338}
   - component: {fileID: 158581339}
+  - component: {fileID: 158581338}
   - component: {fileID: 158581341}
   m_Layer: 0
   m_Name: BeatMap
@@ -1738,7 +1738,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: b9b16d618d9e333488da1f7d35c2e70c, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.26
+  m_Volume: 0.01
   m_Pitch: 1
   Loop: 0
   Mute: 0

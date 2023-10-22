@@ -53,7 +53,9 @@ public class BeatMapHandler : MonoBehaviour
     [SerializeField][Min(0)][Tooltip("How long it should take the beat to move from spawn to beatdetector")]
     private float travelTime;
     [SerializeField][Min(0)][Tooltip("Delay between game start and when the song starts playing")]
-    private float startDelay;
+    private float startDelay = 0f;
+    [SerializeField][Min(0)][Tooltip("Delay between game start and when the song starts playing")]
+    private float finishDelayBuffer = 0f;
 
     [SerializeField]
     private bool randomizeBeatMap = false;
@@ -135,10 +137,13 @@ public class BeatMapHandler : MonoBehaviour
         beatObjects[CurrentBeatIndex].SetActive(false);
         CurrentBeatIndex++;
         BeatCountUpdater.Instance.UpdateText(CurrentBeatIndex);
-        CurrentBeat = beats[CurrentBeatIndex];
         if (CurrentBeatIndex >= beatObjects.Count) {
             Debug.Log("Processing Song Conlcusion");
-            ProcessSongConclusion();
+            StartCoroutine(ProcessSongConclusion());
+        }
+        else
+        {
+            CurrentBeat = beats[CurrentBeatIndex];
         }
     }
     public float GetDistanceDifference()
@@ -193,9 +198,11 @@ public class BeatMapHandler : MonoBehaviour
             beats[i] = new(UnityEngine.Random.Range(beatSpaceMin, beatSpaceMax), (Direction)UnityEngine.Random.Range(0, 4));
         }
     }
-    private void ProcessSongConclusion()
+    private IEnumerator ProcessSongConclusion()
     {
         if (randomizeBeatMap) { bMSO = tempBMSO; }
+        float timeWait = JukeboxController.Instance.AudioSource.clip.length - TimeSinceStart + startDelay + finishDelayBuffer;
+        yield return new WaitForSeconds(timeWait);
         scm.ConcludeSong();
     }
 
