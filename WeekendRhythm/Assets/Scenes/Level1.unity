@@ -389,27 +389,7 @@ MonoBehaviour:
   Down: {fileID: 1466841117, guid: 15f33c2cbe781f94285313fbdcedb285, type: 3}
   Left: {fileID: -329027365, guid: 15f33c2cbe781f94285313fbdcedb285, type: 3}
   Right: {fileID: 1643909027, guid: 15f33c2cbe781f94285313fbdcedb285, type: 3}
-  beats:
-  - TimeSinceLastBeat: 0
-    direction: 0
-  - TimeSinceLastBeat: 1
-    direction: 1
-  - TimeSinceLastBeat: 1
-    direction: 0
-  - TimeSinceLastBeat: 1
-    direction: 1
-  - TimeSinceLastBeat: 1
-    direction: 0
-  - TimeSinceLastBeat: 1
-    direction: 0
-  - TimeSinceLastBeat: 1
-    direction: 0
-  - TimeSinceLastBeat: 1
-    direction: 0
-  - TimeSinceLastBeat: 1
-    direction: 0
-  - TimeSinceLastBeat: 1
-    direction: 0
+  bMSO: {fileID: 11400000, guid: 021b8114aa5ae6849911308048317b55, type: 2}
   beatObject: {fileID: 8538593723776103261, guid: 9faf50423fda8e14b82282ce8dac87eb, type: 3}
   spawnPos: {x: 6, y: 0, z: 0}
   endPos: {x: -6, y: 0, z: 0}

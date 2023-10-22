@@ -38,6 +38,8 @@ public class BeatMapHandler : MonoBehaviour
     Sprite Right;
     [Space(8)]
     [SerializeField]
+    private BeatMapScriptableObject bMSO;
+    [SerializeField]
     private List<Beat> beats = new();
     [SerializeField]
     private GameObject beatObject;
@@ -61,6 +63,7 @@ public class BeatMapHandler : MonoBehaviour
     [SerializeField]
     [Min(0.001f)]
     private float beatSpaceMax;
+    
 
     private List<GameObject> beatObjects;
     private Vector3 detectorPos = new Vector3(-4, 0, 0);
@@ -68,7 +71,6 @@ public class BeatMapHandler : MonoBehaviour
     private int LatestBeatInd = 0;
     private float LatestBeatTime = 0f;
     private float movementSpeed = 0f; // units per second
-
     public enum Direction { Up, Down, Left, Right, None };
 
     public float TimeSinceStart { get; private set; } = 0f;
@@ -82,6 +84,7 @@ public class BeatMapHandler : MonoBehaviour
 
     void Start()
     {
+        beats = bMSO.beatMap;
         detectorPos = PlayerInput.Instance.transform.position;
         if(beatSpaceMin > beatSpaceMax) { Debug.LogError("beatSpaceMin is greater than beatSpaceMax"); }
         if(travelTime == 0) { Debug.LogError("Travel Time is 0. Leads to division by 0"); }
