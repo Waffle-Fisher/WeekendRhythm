@@ -6,6 +6,7 @@ public class SongConclusionManager : MonoBehaviour
 {
     public void ConcludeSong()
     {
+        // Pause Timer
         Debug.Log("Finished Song");
     }
 }
