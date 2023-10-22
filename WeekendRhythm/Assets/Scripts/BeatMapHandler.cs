@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Unity.Mathematics;
 using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
+using UnityEditor;
 
 public class BeatMapHandler : MonoBehaviour
 {
@@ -63,7 +63,6 @@ public class BeatMapHandler : MonoBehaviour
     [SerializeField]
     [Min(0.001f)]
     private float beatSpaceMax;
-    
 
     private List<GameObject> beatObjects;
     private Vector3 detectorPos = new Vector3(-4, 0, 0);
@@ -71,6 +70,9 @@ public class BeatMapHandler : MonoBehaviour
     private int LatestBeatInd = 0;
     private float LatestBeatTime = 0f;
     private float movementSpeed = 0f; // units per second
+    private BeatMapScriptableObject tempBMSO;
+    private SongConclusionManager scm;
+
     public enum Direction { Up, Down, Left, Right, None };
 
     public float TimeSinceStart { get; private set; } = 0f;
@@ -85,12 +87,14 @@ public class BeatMapHandler : MonoBehaviour
     void Start()
     {
         beats = bMSO.beatMap;
+        scm = GetComponent<SongConclusionManager>();
         detectorPos = PlayerInput.Instance.transform.position;
         if(beatSpaceMin > beatSpaceMax) { Debug.LogError("beatSpaceMin is greater than beatSpaceMax"); }
         if(travelTime == 0) { Debug.LogError("Travel Time is 0. Leads to division by 0"); }
         movementSpeed = (spawnPos.x - detectorPos.x) / travelTime;
         if (randomizeBeatMap)
         {
+            tempBMSO = bMSO;
             RandomizeBeatMapping();
         }
         InitializeBeatObjectPool();
@@ -109,6 +113,8 @@ public class BeatMapHandler : MonoBehaviour
         float totalBeatTimes = 0f;
         for (int i = CurrentBeatIndex; i < LatestBeatInd; i++)
         {
+            //Debug.Log("CurrentBeatIndex: " + CurrentBeatIndex);
+            //Debug.Log("LatestBeatIndex: " + LatestBeatInd);
             if (!beatObjects[i].activeSelf)
             {
                 float beatPosX = spawnPos.x + (totalBeatTimes + beats[i].TimeSinceLastBeat) * movementSpeed;
@@ -127,20 +133,19 @@ public class BeatMapHandler : MonoBehaviour
     public void IncrementCurrentBeat()
     {
         beatObjects[CurrentBeatIndex].SetActive(false);
-        if (CurrentBeatIndex + 1 >= beatObjects.Count) { return; }
         CurrentBeatIndex++;
         BeatCountUpdater.Instance.UpdateText(CurrentBeatIndex);
         CurrentBeat = beats[CurrentBeatIndex];
+        if (CurrentBeatIndex >= beatObjects.Count) {
+            Debug.Log("Processing Song Conlcusion");
+            ProcessSongConclusion();
+        }
     }
-
     public float GetDistanceDifference()
     {
         float delta = beatObjects[CurrentBeatIndex].transform.position.x - detectorPos.x;
-        //Debug.Log("Current Beat Pos: " + beatObjects[CurrentBeatIndex].transform.position);
-        //Debug.Log("Difference between detector and beat " + CurrentBeatIndex + ": " + delta);
         return delta;
     }
-
     void MoveBeat(GameObject g)
     {
         g.transform.Translate(movementSpeed * Time.deltaTime * Vector2.left);
@@ -152,7 +157,6 @@ public class BeatMapHandler : MonoBehaviour
             BeatGradeUpdater.Instance.ShowText();
         }
     }
-
     private void InitializeBeatObjectPool()
     {
         beatObjects = new List<GameObject>();
@@ -182,13 +186,17 @@ public class BeatMapHandler : MonoBehaviour
             sr.sprite = Right;
         }
     }
-
     private void RandomizeBeatMapping()
     {
         for (int i = 1; i < beats.Count; i++)
         {
             beats[i] = new(UnityEngine.Random.Range(beatSpaceMin, beatSpaceMax), (Direction)UnityEngine.Random.Range(0, 4));
         }
+    }
+    private void ProcessSongConclusion()
+    {
+        if (randomizeBeatMap) { bMSO = tempBMSO; }
+        scm.ConcludeSong();
     }
 
     private void OnDrawGizmos()
@@ -201,12 +209,12 @@ public class BeatMapHandler : MonoBehaviour
         Gizmos.DrawCube(Vector3.zero, Vector3.one * 0.1f);
 
         float totalBeatTimes = 0f;
-        for(int i = 0; i < beats.Count; i++)
+        for(int i = 0; i < bMSO.beatMap.Count; i++)
         {
-            UnityEditor.Handles.color = (i % 2 == 0) ? Color.blue : Color.yellow;
-            Vector3 beatPos = new(spawnPos.x + (totalBeatTimes + beats[i].TimeSinceLastBeat) * (spawnPos.x - detectorPos.x) / travelTime, spawnPos.y, spawnPos.z);
-            UnityEditor.Handles.DrawSolidDisc(beatPos, Vector3.back, 0.1f);
-            totalBeatTimes += beats[i].TimeSinceLastBeat;
+            Handles.color = (i % 2 == 0) ? Color.blue : Color.yellow;
+            Vector3 beatPos = new(spawnPos.x + (totalBeatTimes + bMSO.beatMap[i].TimeSinceLastBeat) * (spawnPos.x - detectorPos.x) / travelTime, spawnPos.y, spawnPos.z);
+            Handles.DrawSolidDisc(beatPos, Vector3.back, 0.1f);
+            totalBeatTimes += bMSO.beatMap[i].TimeSinceLastBeat;
         }
     }
 }

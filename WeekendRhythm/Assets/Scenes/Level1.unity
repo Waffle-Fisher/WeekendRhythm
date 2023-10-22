@@ -366,6 +366,7 @@ GameObject:
   - component: {fileID: 158581340}
   - component: {fileID: 158581338}
   - component: {fileID: 158581339}
+  - component: {fileID: 158581341}
   m_Layer: 0
   m_Name: BeatMap
   m_TagString: Untagged
@@ -390,6 +391,7 @@ MonoBehaviour:
   Left: {fileID: -329027365, guid: 15f33c2cbe781f94285313fbdcedb285, type: 3}
   Right: {fileID: 1643909027, guid: 15f33c2cbe781f94285313fbdcedb285, type: 3}
   bMSO: {fileID: 11400000, guid: 021b8114aa5ae6849911308048317b55, type: 2}
+  beats: []
   beatObject: {fileID: 8538593723776103261, guid: 9faf50423fda8e14b82282ce8dac87eb, type: 3}
   spawnPos: {x: 6, y: 0, z: 0}
   endPos: {x: -6, y: 0, z: 0}
@@ -460,6 +462,18 @@ RectTransform:
   m_AnchoredPosition: {x: 6, y: 0}
   m_SizeDelta: {x: 20, y: 5}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &158581341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 158581336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8665b3ba28292e6488eee6d0eb04e2b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &224440386
 GameObject:
   m_ObjectHideFlags: 0
@@ -863,10 +877,10 @@ RectTransform:
   m_Father: {fileID: 1911171891}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -284.54776, y: 180}
-  m_SizeDelta: {x: 110.6748, y: 50}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 115, y: -30}
+  m_SizeDelta: {x: 110, y: 35}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &385547243
 MonoBehaviour:
@@ -1328,10 +1342,10 @@ RectTransform:
   m_Father: {fileID: 1911171891}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -240, y: 140}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 220, y: -85}
+  m_SizeDelta: {x: 320, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &603785850
 MonoBehaviour:
@@ -1353,7 +1367,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Beat Count:  0'
+  m_text: 'Beat Count: 0'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5418aa14bb046994a953614858800087, type: 2}
   m_sharedMaterial: {fileID: -680953279364598709, guid: 5418aa14bb046994a953614858800087, type: 2}
@@ -1416,7 +1430,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: -63.533234, w: 0}
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -1724,7 +1738,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: b9b16d618d9e333488da1f7d35c2e70c, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.26
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -2481,6 +2495,7 @@ MonoBehaviour:
   greatMargin: 1
   inputDistanceRange: 2
   GradeDisplayLength: 0.5
+  AudioClipIndex: 0
 --- !u!4 &1527015196
 Transform:
   m_ObjectHideFlags: 0
