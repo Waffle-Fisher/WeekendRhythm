@@ -19,6 +19,11 @@ public class PlayerInput : MonoBehaviour
     [SerializeField]
     [Tooltip("How long the grade should stay on the screen")]
     float GradeDisplayLength = 1f;
+    [SerializeField]
+    [Tooltip("How long the grade should stay on the screen")]
+    [Min(0)]
+    int AudioClipIndex = 0;
+
 
     float GradeDisplayTimer = 0f;
 
@@ -56,7 +61,7 @@ public class PlayerInput : MonoBehaviour
     {
         RemoveGradeText();
         if (!input.WasPressedThisFrame()) { return; }
-        pSFX.PlayAudioClip(1);
+        pSFX.PlayAudioClip(AudioClipIndex);
         float distanceDifference = BeatMapHandler.Instance.GetDistanceDifference();
         if (distanceDifference > inputDistanceRange) { return; }
         ScoreGradeHit(distanceDifference);
