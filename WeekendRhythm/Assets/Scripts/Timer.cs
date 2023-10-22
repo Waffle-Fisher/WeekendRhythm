@@ -19,8 +19,6 @@ public class Timer : MonoBehaviour
         time = BeatMapHandler.Instance.TimeSinceStart;
         minutes = (int)(time / 60);
         seconds = (int)(time % 60);
-        Debug.Log("Minutes: " + minutes);
-        Debug.Log("Seconds: " + seconds);
         text.text = string.Format("{0}:{1:00}", minutes, seconds);
     }
 }

@@ -148,6 +148,7 @@ public class BeatMapHandler : MonoBehaviour
     }
     public float GetDistanceDifference()
     {
+        if (CurrentBeatIndex >= beatObjects.Count) { return 999f; }
         float delta = beatObjects[CurrentBeatIndex].transform.position.x - detectorPos.x;
         return delta;
     }
