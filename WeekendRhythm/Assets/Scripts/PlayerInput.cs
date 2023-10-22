@@ -57,10 +57,10 @@ public class PlayerInput : MonoBehaviour
         RemoveGradeText();
         if (!input.WasPressedThisFrame()) { return; }
         pSFX.PlayAudioClip(1);
-        float distanceDifference = BeatMap.Instance.GetDistanceDifference();
+        float distanceDifference = BeatMapHandler.Instance.GetDistanceDifference();
         if (distanceDifference > inputDistanceRange) { return; }
         ScoreGradeHit(distanceDifference);
-        BeatMap.Instance.IncrementCurrentBeat();
+        BeatMapHandler.Instance.IncrementCurrentBeat();
     }
 
     private void RemoveGradeText()
@@ -83,19 +83,19 @@ public class PlayerInput : MonoBehaviour
         Debug.Log("Distance Difference:" + distDif);
         if(bguInstance.GetEnabled()){ bguInstance.HideText(); }
         if (distDif > inputDistanceRange) { bguInstance.UpdateText("Miss"); }
-        else if(GetInput() != BeatMap.Instance.CurrentBeat.direction) { bguInstance.UpdateText("Wrong"); }
+        else if(GetInput() != BeatMapHandler.Instance.CurrentBeat.direction) { bguInstance.UpdateText("Wrong"); }
         else if (distDif < greatMargin) { bguInstance.UpdateText("Great");}
         else { bguInstance.UpdateText("Nice"); }
         bguInstance.ShowText();
     }
 
-    BeatMap.Direction GetInput()
+    BeatMapHandler.Direction GetInput()
     {
         Vector2 v2 = input.ReadValue<Vector2>();
-        if (v2.y >= 1) { return BeatMap.Direction.Up; }
-        else if (v2.y <= -1) { return BeatMap.Direction.Down; }
-        else if (v2.x <= -1) { return BeatMap.Direction.Left; }
-        else { return BeatMap.Direction.Right; }
+        if (v2.y >= 1) { return BeatMapHandler.Direction.Up; }
+        else if (v2.y <= -1) { return BeatMapHandler.Direction.Down; }
+        else if (v2.x <= -1) { return BeatMapHandler.Direction.Left; }
+        else { return BeatMapHandler.Direction.Right; }
     }
 
     public void HideZeroGradeDisplayTimer()
