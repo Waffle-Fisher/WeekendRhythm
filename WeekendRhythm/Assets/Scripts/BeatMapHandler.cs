@@ -207,6 +207,7 @@ public class BeatMapHandler : MonoBehaviour
         scm.ConcludeSong();
     }
 
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
@@ -225,4 +226,5 @@ public class BeatMapHandler : MonoBehaviour
             totalBeatTimes += levelBeatMapSO.beatMap[i].TimeSinceLastBeat;
         }
     }
+#endif
 }
