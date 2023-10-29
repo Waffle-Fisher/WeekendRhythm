@@ -15,21 +15,21 @@ MonoBehaviour:
   beatMap:
   - TimeSinceLastBeat: 0
     direction: 0
-  - TimeSinceLastBeat: 0.4347922
-    direction: 1
-  - TimeSinceLastBeat: 0.091056414
-    direction: 3
-  - TimeSinceLastBeat: 0.020996045
+  - TimeSinceLastBeat: 1
     direction: 0
-  - TimeSinceLastBeat: 0.26825157
+  - TimeSinceLastBeat: 2
     direction: 2
-  - TimeSinceLastBeat: 0.42757824
-    direction: 0
-  - TimeSinceLastBeat: 0.029804718
-    direction: 2
-  - TimeSinceLastBeat: 0.44781277
+  - TimeSinceLastBeat: 3
     direction: 3
-  - TimeSinceLastBeat: 0.07599339
+  - TimeSinceLastBeat: 0.122337446
+    direction: 3
+  - TimeSinceLastBeat: 0.40680197
     direction: 1
-  - TimeSinceLastBeat: 0.1794729
+  - TimeSinceLastBeat: 0.24061733
+    direction: 2
+  - TimeSinceLastBeat: 0.49933976
+    direction: 0
+  - TimeSinceLastBeat: 0.18275812
     direction: 3
+  - TimeSinceLastBeat: 0.22157322
+    direction: 0

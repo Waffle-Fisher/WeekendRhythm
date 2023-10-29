@@ -390,14 +390,15 @@ MonoBehaviour:
   Down: {fileID: 1466841117, guid: 15f33c2cbe781f94285313fbdcedb285, type: 3}
   Left: {fileID: -329027365, guid: 15f33c2cbe781f94285313fbdcedb285, type: 3}
   Right: {fileID: 1643909027, guid: 15f33c2cbe781f94285313fbdcedb285, type: 3}
-  bMSO: {fileID: 11400000, guid: 021b8114aa5ae6849911308048317b55, type: 2}
+  randomizeBeatMap: 0
+  levelBeatMapSO: {fileID: 11400000, guid: 021b8114aa5ae6849911308048317b55, type: 2}
   beats: []
   beatObject: {fileID: 8538593723776103261, guid: 9faf50423fda8e14b82282ce8dac87eb, type: 3}
   spawnPos: {x: 6, y: 0, z: 0}
   endPos: {x: -6, y: 0, z: 0}
   travelTime: 5
   startDelay: 2
-  randomizeBeatMap: 1
+  finishDelayBuffer: 0
   beatSpaceMin: 0.01
   beatSpaceMax: 0.5
 --- !u!23 &158581339

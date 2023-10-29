@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class MenuControls : MonoBehaviour
 {
-    public void SwitchScene(int sceneIndex)
+    public void LoadLevel(int sceneIndex)
     {
         SceneManager.LoadScene(sceneIndex);
     }

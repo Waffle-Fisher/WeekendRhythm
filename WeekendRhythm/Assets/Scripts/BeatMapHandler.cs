@@ -13,7 +13,7 @@ public class BeatMapHandler : MonoBehaviour
     [Serializable]
     public struct Beat
     {
-        [Min(0)]
+        [Min(0f)]
         [SerializeField]
         public float TimeSinceLastBeat;// { get; private set };
 
@@ -37,13 +37,16 @@ public class BeatMapHandler : MonoBehaviour
     [SerializeField]
     Sprite Right;
     [Space(8)]
+    [Header("BeatMap")]
+    //[SerializeField]
+    //private bool randomizeBeatMap = false;
     [SerializeField]
-    private BeatMapScriptableObject bMSO;
+    private BeatMapScriptableObject levelBeatMapSO;
     [SerializeField]
     private List<Beat> beats = new();
     [SerializeField]
     private GameObject beatObject;
-    
+    [Space(8)]
     [Header("Settings")]
     [SerializeField]
     private Vector3 spawnPos = new Vector3(6, 0, 0);
@@ -57,8 +60,7 @@ public class BeatMapHandler : MonoBehaviour
     [SerializeField][Min(0)][Tooltip("Delay between game start and when the song starts playing")]
     private float finishDelayBuffer = 0f;
 
-    [SerializeField]
-    private bool randomizeBeatMap = false;
+    
     [SerializeField]
     [Min(0.001f)]
     private float beatSpaceMin;
@@ -72,14 +74,13 @@ public class BeatMapHandler : MonoBehaviour
     private int LatestBeatInd = 0;
     private float LatestBeatTime = 0f;
     private float movementSpeed = 0f; // units per second
-    private BeatMapScriptableObject tempBMSO;
     private SongConclusionManager scm;
+    private BeatMapScriptableObject randomizedBMSO;
 
-    public enum Direction { Up, Down, Left, Right, None };
-
+    public enum Direction { Up, Down, Left, Right, None }; 
     public float TimeSinceStart { get; private set; } = 0f;
     public Beat CurrentBeat { get; private set; }
-
+    
     void Awake()
     {
         if(Instance == null) { Instance = this; }
@@ -88,18 +89,18 @@ public class BeatMapHandler : MonoBehaviour
 
     void Start()
     {
-        beats = bMSO.beatMap;
+        beats = levelBeatMapSO.beatMap;
         scm = GetComponent<SongConclusionManager>();
         detectorPos = PlayerInput.Instance.transform.position;
         if(beatSpaceMin > beatSpaceMax) { Debug.LogError("beatSpaceMin is greater than beatSpaceMax"); }
         if(travelTime == 0) { Debug.LogError("Travel Time is 0. Leads to division by 0"); }
         movementSpeed = (spawnPos.x - detectorPos.x) / travelTime;
-        if (randomizeBeatMap)
-        {
-            tempBMSO = bMSO;
-            RandomizeBeatMapping();
-        }
-        InitializeBeatObjectPool();
+        //if (randomizeBeatMap)
+        //{
+        //    beats = randomizedBMSO.beatMap;
+        //    RandomizeBeatMapping();
+        //}
+        InitializeBeatObjects();
         StartCoroutine(JukeboxController.Instance.PlaySong(startDelay));
     }
 
@@ -163,7 +164,7 @@ public class BeatMapHandler : MonoBehaviour
             BeatGradeUpdater.Instance.ShowText();
         }
     }
-    private void InitializeBeatObjectPool()
+    private void InitializeBeatObjects()
     {
         beatObjects = new List<GameObject>();
         for (int i = 0; i < beats.Count; i++)
@@ -201,7 +202,6 @@ public class BeatMapHandler : MonoBehaviour
     }
     private IEnumerator ProcessSongConclusion()
     {
-        if (randomizeBeatMap) { bMSO = tempBMSO; }
         float timeWait = JukeboxController.Instance.AudioSource.clip.length - TimeSinceStart + startDelay + finishDelayBuffer;
         yield return new WaitForSeconds(timeWait);
         scm.ConcludeSong();
@@ -217,12 +217,12 @@ public class BeatMapHandler : MonoBehaviour
         Gizmos.DrawCube(Vector3.zero, Vector3.one * 0.1f);
 
         float totalBeatTimes = 0f;
-        for(int i = 0; i < bMSO.beatMap.Count; i++)
+        for(int i = 0; i < levelBeatMapSO.beatMap.Count; i++)
         {
             Handles.color = (i % 2 == 0) ? Color.blue : Color.yellow;
-            Vector3 beatPos = new(spawnPos.x + (totalBeatTimes + bMSO.beatMap[i].TimeSinceLastBeat) * (spawnPos.x - detectorPos.x) / travelTime, spawnPos.y, spawnPos.z);
+            Vector3 beatPos = new(spawnPos.x + (totalBeatTimes + levelBeatMapSO.beatMap[i].TimeSinceLastBeat) * (spawnPos.x - detectorPos.x) / travelTime, spawnPos.y, spawnPos.z);
             Handles.DrawSolidDisc(beatPos, Vector3.back, 0.1f);
-            totalBeatTimes += bMSO.beatMap[i].TimeSinceLastBeat;
+            totalBeatTimes += levelBeatMapSO.beatMap[i].TimeSinceLastBeat;
         }
     }
 }
