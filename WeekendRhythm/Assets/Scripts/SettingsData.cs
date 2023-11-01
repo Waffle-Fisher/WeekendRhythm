@@ -7,6 +7,9 @@ using UnityEngine.UI;
 
 public class SettingsData : MonoBehaviour
 {
+    public static SettingsData Instance { get; private set; }
+    public bool updateSettings = false;
+
     [Range(0f, 1f)]
     public float MusicVolumePercent = 0.5f;
     [Range(0f, 1f)]
@@ -19,6 +22,11 @@ public class SettingsData : MonoBehaviour
     private bool isMusic = false;
     private bool isSFX = false;
 
+    private void Awake()
+    {
+        if(Instance == null) { Instance = this; }
+        else { Destroy(gameObject); }
+    }
     void Start()
     {
         DontDestroyOnLoad(this.gameObject);
