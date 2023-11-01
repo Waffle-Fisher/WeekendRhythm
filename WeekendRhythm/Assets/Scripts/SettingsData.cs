@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 
@@ -21,6 +22,8 @@ public class SettingsData : MonoBehaviour
 
     private bool isMusic = false;
     private bool isSFX = false;
+
+    JukeboxController jc;
 
     private void Awake()
     {

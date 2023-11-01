@@ -23,4 +23,9 @@ public class JukeboxController : MonoBehaviour
         yield return new WaitForSeconds(delay);
         AudioSource.PlayOneShot(AudioSource.clip);
     }
+
+    public void ChangeVolume(float i)
+    {
+        AudioSource.volume = i;
+    }
 }
