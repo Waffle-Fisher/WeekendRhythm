@@ -12,7 +12,6 @@ public class InitializeAudio : MonoBehaviour
     [SerializeField]
     private float musicDelay;
 
-
     void Start() {
         MusicSlider.value = settingValues.MusicVolumePercent;
         SFXSlider.value = settingValues.SFXVolumePercent;
