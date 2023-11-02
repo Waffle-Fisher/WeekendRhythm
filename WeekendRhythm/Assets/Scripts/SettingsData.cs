@@ -1,29 +1,22 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-
 public class SettingsData : MonoBehaviour
 {
     public static SettingsData Instance { get; private set; }
-    public bool updateSettings = false;
 
-    [Range(0f, 1f)]
-    public float MusicVolumePercent = 0.5f;
-    [Range(0f, 1f)]
-    public float SFXVolumePercent = 0.5f;
-    [SerializeField]
-    [Min(1)]
-    [Tooltip("Should be the same as slider's max value")]
-    private int maxVolume = 10;
+    public SettingsScriptableObject settingValues;
 
-    private bool isMusic = false;
-    private bool isSFX = false;
-
-    JukeboxController jc;
+    // [Range(0f, 1f)]
+    // public float MusicVolumePercent= 0.5f;// = settingValues.MusicVolumePercent;
+    // [Range(0f, 1f)]
+    // public float SFXVolumePercent = 0.5f;
 
     private void Awake()
     {
@@ -35,32 +28,25 @@ public class SettingsData : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
     }
 
-
-    public void SetVolume(float newVolume)
+    public void SetMusicVolume(float newVolume)
     {
-        if(isMusic && isSFX) { 
-            Debug.LogError("Both isMusic and isSFX are true");
-            return;
-        }
-        if (isMusic) { MusicVolumePercent = newVolume; 
-            Debug.Log("MusicVolume: " + MusicVolumePercent);
-        }
-        else if(isSFX) { SFXVolumePercent = newVolume;
-            Debug.Log("SFXVolume: " + SFXVolumePercent);
-        }
-        else {
-            Debug.LogError("Both isMusic and isSFX are false");
-            return;
-        }
+        settingValues.MusicVolumePercent = (float)Math.Round(newVolume,2); 
+        Debug.Log("MusicVolume: " + settingValues.MusicVolumePercent);
     }
 
-    public void SetIsMusic(bool b)
+    public void SetSFXVolume(float newVolume)
     {
-        isMusic = b;
+        settingValues.SFXVolumePercent = (float)Math.Round(newVolume,2);
+        Debug.Log("SFXVolume: " + settingValues.SFXVolumePercent);
     }
 
-    public void SetIsSFX(bool b)
+    public void ChangeMusicText(GameObject g)
     {
-        isSFX = b;
+        g.GetComponent<TextMeshProUGUI>().text = String.Format("{0:0%}",settingValues.MusicVolumePercent);
+    }
+
+    public void ChangeSFXText(GameObject g)
+    {
+        g.GetComponent<TextMeshProUGUI>().text = String.Format("{0:0%}",settingValues.SFXVolumePercent);
     }
 }

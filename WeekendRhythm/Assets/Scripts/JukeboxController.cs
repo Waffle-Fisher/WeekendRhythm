@@ -16,6 +16,8 @@ public class JukeboxController : MonoBehaviour
     void Start()
     {
         AudioSource = GetComponent<AudioSource>();
+        DontDestroyOnLoad(this.gameObject);
+        AudioSource.volume = SettingsData.Instance.settingValues.MusicVolumePercent;
     }
 
     public IEnumerator PlaySong(float delay)
