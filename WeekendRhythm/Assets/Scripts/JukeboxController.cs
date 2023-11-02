@@ -11,11 +11,11 @@ public class JukeboxController : MonoBehaviour
     {
         if (Instance == null) { Instance = this; }
         else { Destroy(gameObject); }
+        AudioSource = GetComponent<AudioSource>();
     }
     // Start is called before the first frame update
     void Start()
     {
-        AudioSource = GetComponent<AudioSource>();
         DontDestroyOnLoad(this.gameObject);
         AudioSource.volume = SettingsData.Instance.settingValues.MusicVolumePercent;
     }
