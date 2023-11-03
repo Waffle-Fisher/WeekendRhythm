@@ -11,10 +11,13 @@ public class InitializeAudio : MonoBehaviour
     public SettingsScriptableObject settingValues;
     [SerializeField]
     private float musicDelay;
+    [SerializeField]
+    private AudioClip audioClip;
 
     void Start() {
         MusicSlider.value = settingValues.MusicVolumePercent;
         SFXSlider.value = settingValues.SFXVolumePercent;
+        JukeboxController.Instance.GetComponent<AudioSource>().clip = audioClip;
         StartCoroutine(JukeboxController.Instance.PlaySong(musicDelay));
     }
 }

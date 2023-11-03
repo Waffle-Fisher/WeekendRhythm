@@ -11,6 +11,8 @@ public class PlayerInput : MonoBehaviour
     [SerializeField] 
     InputAction input;
     [SerializeField]
+    InputAction escape;
+    [SerializeField]
     [Tooltip("The latest timeDif a beat can score a great")]
     float greatMargin = 0.5f;
     [SerializeField]
@@ -32,11 +34,13 @@ public class PlayerInput : MonoBehaviour
     void OnEnable()
     {
         input.Enable();
+        escape.Enable();
     }
 
     void OnDisable()
     {
         input.Disable();
+        escape.Disable();
     }
 
     private void Awake()
@@ -55,6 +59,10 @@ public class PlayerInput : MonoBehaviour
     void Update()
     {
         RemoveGradeText();
+        if (escape.WasPressedThisFrame())
+        {
+            //ProcessEscape();
+        }
         if (input.WasPressedThisFrame()) {
             ProcessGrade();
         }

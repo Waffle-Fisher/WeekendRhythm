@@ -155,7 +155,8 @@ MonoBehaviour:
   MusicSlider: {fileID: 989106498}
   SFXSlider: {fileID: 1468672961}
   settingValues: {fileID: 11400000, guid: 792c17763cab397468b765cd1adb4d5e, type: 2}
-  musicDelay: 0
+  musicDelay: 5
+  audioClip: {fileID: 8300000, guid: b9b16d618d9e333488da1f7d35c2e70c, type: 3}
 --- !u!4 &98875672
 Transform:
   m_ObjectHideFlags: 0
