@@ -136,6 +136,15 @@ MonoBehaviour:
       m_Action: Input
       m_Flags: 8
     m_Flags: 0
+  escape:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: e0f1aef9-2c0c-45a3-bd42-b97506c37537
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
   greatMargin: 1
   inputDistanceRange: 2
   GradeDisplayLength: 0.5
@@ -280,7 +289,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1557252708660754090}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1557252706860698367
 SpriteRenderer:
@@ -364,7 +373,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1557252708660754090}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1557252707905345017
 SpriteRenderer:
@@ -446,8 +455,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1557252707905345022}
   - {fileID: 1557252706860698366}
+  - {fileID: 1557252707905345022}
   m_Father: {fileID: 1557252706665644710}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

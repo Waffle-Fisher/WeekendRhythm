@@ -106,11 +106,21 @@ public class PlayerInput : MonoBehaviour
     {
         Debug.Log("Distance Difference:" + distDif);
         if(bguInstance.GetEnabled()){ bguInstance.HideText(); }
-        if (distDif > inputDistanceRange) { bguInstance.UpdateText("Miss"); }
-        else if(GetInput() != BeatMapHandler.Instance.CurrentBeat.direction) { bguInstance.UpdateText("Wrong"); }
-        else if (distDif < greatMargin) { bguInstance.UpdateText("Great");}
-        else { bguInstance.UpdateText("Nice"); }
-        bguInstance.ShowText();
+        if (distDif > inputDistanceRange) { 
+            ComboCountUpdater.Instance.ResetCombo();
+            bguInstance.UpdateText("Miss");
+        } else if(GetInput() != BeatMapHandler.Instance.CurrentBeat.direction) { 
+            ComboCountUpdater.Instance.ResetCombo();
+            bguInstance.UpdateText("Wrong"); 
+        } else if (distDif < greatMargin) { 
+            bguInstance.UpdateText("Great");
+            ComboCountUpdater.Instance.IncrementCombo();
+            ScoreManager.Instance.AwardPoints(1);
+        } else { 
+            bguInstance.UpdateText("Nice");
+            ComboCountUpdater.Instance.IncrementCombo();
+            ScoreManager.Instance.AwardPoints(0);
+        } bguInstance.ShowText();
     }
 
     BeatMapHandler.Direction GetInput()
@@ -126,12 +136,6 @@ public class PlayerInput : MonoBehaviour
     {
         bguInstance.HideText();
         GradeDisplayTimer = 0f;
-    }
-
-    private void ProcessEscape()
-    {
-        pauseGC.Pause();
-        // open settings UI
     }
 
     private void OnDrawGizmos()

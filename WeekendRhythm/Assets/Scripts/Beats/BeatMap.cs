@@ -135,7 +135,6 @@ public class BeatMap : MonoBehaviour
         beatObjects[CurrentBeatIndex].gameObject.SetActive(false);
         if(CurrentBeatIndex + 1 >= beatObjects.Count) { return; }
         CurrentBeatIndex++;
-        BeatCountUpdater.Instance.UpdateText(CurrentBeatIndex);
         CurrentBeat = beats[CurrentBeatIndex];
     }
 

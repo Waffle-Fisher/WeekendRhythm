@@ -95,11 +95,6 @@ public class BeatMapHandler : MonoBehaviour
         if(beatSpaceMin > beatSpaceMax) { Debug.LogError("beatSpaceMin is greater than beatSpaceMax"); }
         if(travelTime == 0) { Debug.LogError("Travel Time is 0. Leads to division by 0"); }
         movementSpeed = (spawnPos.x - detectorPos.x) / travelTime;
-        //if (randomizeBeatMap)
-        //{
-        //    beats = randomizedBMSO.beatMap;
-        //    RandomizeBeatMapping();
-        //}
         InitializeBeatObjects();
         StartCoroutine(JukeboxController.Instance.PlaySong(startDelay));
     }
@@ -116,8 +111,6 @@ public class BeatMapHandler : MonoBehaviour
         float totalBeatTimes = 0f;
         for (int i = CurrentBeatIndex; i < LatestBeatInd; i++)
         {
-            //Debug.Log("CurrentBeatIndex: " + CurrentBeatIndex);
-            //Debug.Log("LatestBeatIndex: " + LatestBeatInd);
             if (!beatObjects[i].activeSelf)
             {
                 float beatPosX = spawnPos.x + (totalBeatTimes + beats[i].TimeSinceLastBeat) * movementSpeed;
@@ -128,16 +121,12 @@ public class BeatMapHandler : MonoBehaviour
             MoveBeat(beatObjects[i]);
             totalBeatTimes += beats[i].TimeSinceLastBeat;
         }
-
-        //Debug.Log("Time: " + TimeSinceStart + "\n");
-        //Debug.Log("CurBeat: " + CurrentBeatIndex + "\n" + "LatestBeat: " + LatestBeat + "\n");
     }
 
     public void IncrementCurrentBeat()
     {
         beatObjects[CurrentBeatIndex].SetActive(false);
         CurrentBeatIndex++;
-        BeatCountUpdater.Instance.UpdateText(CurrentBeatIndex);
         if (CurrentBeatIndex >= beatObjects.Count) {
             Debug.Log("Processing Song Conlcusion");
             StartCoroutine(ProcessSongConclusion());
