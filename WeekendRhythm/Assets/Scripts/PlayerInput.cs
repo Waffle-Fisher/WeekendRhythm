@@ -31,6 +31,7 @@ public class PlayerInput : MonoBehaviour
 
     BeatGradeUpdater bguInstance;
     private PlayerSFX pSFX;
+    private PauseGameController pauseGC;
     void OnEnable()
     {
         input.Enable();
@@ -54,6 +55,7 @@ public class PlayerInput : MonoBehaviour
         if (inputDistanceRange < greatMargin) { Debug.LogError("inputTimeRange is smaller than greatMargin"); }
         bguInstance = BeatGradeUpdater.Instance;
         pSFX = GetComponent<PlayerSFX>();
+        pauseGC = PauseGameController.Instance;
     }
 
     void Update()
@@ -61,9 +63,17 @@ public class PlayerInput : MonoBehaviour
         RemoveGradeText();
         if (escape.WasPressedThisFrame())
         {
-            //ProcessEscape();
+            if(!pauseGC.IsPaused)
+            {
+                pauseGC.Pause();
+                pauseGC.ToggleSettingsMenu();
+            }
+            else {
+                pauseGC.Resume();
+                pauseGC.ToggleSettingsMenu();
+            }
         }
-        if (input.WasPressedThisFrame()) {
+        else if (!pauseGC.IsPaused && input.WasPressedThisFrame()) {
             ProcessGrade();
         }
     }
@@ -116,6 +126,12 @@ public class PlayerInput : MonoBehaviour
     {
         bguInstance.HideText();
         GradeDisplayTimer = 0f;
+    }
+
+    private void ProcessEscape()
+    {
+        pauseGC.Pause();
+        // open settings UI
     }
 
     private void OnDrawGizmos()
