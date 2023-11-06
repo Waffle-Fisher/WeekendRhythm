@@ -4,9 +4,13 @@ using UnityEngine;
 
 public class SongConclusionManager : MonoBehaviour
 {
+    [SerializeField]
+    private GameObject scmObject;
+
     public void ConcludeSong()
     {
-        // Pause Timer
+        PauseGameController.Instance.Pause();
+        scmObject.SetActive(true);
         Debug.Log("Finished Song");
     }
 }

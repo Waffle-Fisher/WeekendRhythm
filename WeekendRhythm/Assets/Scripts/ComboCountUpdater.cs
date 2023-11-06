@@ -28,11 +28,13 @@ public class ComboCountUpdater : MonoBehaviour
     public void IncrementCombo()
     {
         Combo++;
+        UpdateText();
     }
 
     public void ResetCombo()
     {
         Combo = 0;
+        UpdateText();
     }
 
 }

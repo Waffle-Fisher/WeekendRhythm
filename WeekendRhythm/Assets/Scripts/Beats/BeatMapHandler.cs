@@ -191,8 +191,9 @@ public class BeatMapHandler : MonoBehaviour
     }
     private IEnumerator ProcessSongConclusion()
     {
-        float timeWait = JukeboxController.Instance.AudioSource.clip.length - TimeSinceStart + startDelay + finishDelayBuffer;
-        yield return new WaitForSeconds(timeWait);
+        //float timeWait = JukeboxController.Instance.AudioSource.clip.length - TimeSinceStart + startDelay + finishDelayBuffer;
+        //yield return new WaitForSeconds(timeWait);
+        yield return new WaitForSeconds(0);
         scm.ConcludeSong();
     }
 
