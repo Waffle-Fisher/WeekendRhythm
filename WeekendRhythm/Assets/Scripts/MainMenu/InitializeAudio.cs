@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Timeline;
 using UnityEngine.UI;
 
 public class InitializeAudio : MonoBehaviour
@@ -17,7 +18,10 @@ public class InitializeAudio : MonoBehaviour
     void Start() {
         MusicSlider.value = settingValues.MusicVolumePercent;
         SFXSlider.value = settingValues.SFXVolumePercent;
-        JukeboxController.Instance.GetComponent<AudioSource>().clip = audioClip;
-        StartCoroutine(JukeboxController.Instance.PlaySong(musicDelay));
+        if(audioClip)
+        {
+            JukeboxController.Instance.GetComponent<AudioSource>().clip = audioClip;
+            StartCoroutine(JukeboxController.Instance.PlaySong(musicDelay));
+        }
     }
 }

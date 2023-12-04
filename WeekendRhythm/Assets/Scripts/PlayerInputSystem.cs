@@ -113,7 +113,7 @@ public class PlayerInputSystem : MonoBehaviour
 
     private void ScoreGradeHit(float distDif, BeatMapHandler.Direction dir)
     {
-        Debug.Log("Distance Difference:" + distDif);
+        //Debug.Log("Distance Difference:" + distDif);
         if(bguInstance.GetEnabled()){ bguInstance.HideText(); }
         if (distDif > inputDistanceRange) { 
             ComboCountUpdater.Instance.ResetCombo();
@@ -131,15 +131,6 @@ public class PlayerInputSystem : MonoBehaviour
             ScoreManager.Instance.AwardPoints(0);
         } bguInstance.ShowText();
     }
-
-    // BeatMapHandler.Direction GetInput()
-    // {
-    //     Vector2 v2 = input.ReadValue<Vector2>();
-    //     if (v2.y >= 1) { return BeatMapHandler.Direction.Up; }
-    //     else if (v2.y <= -1) { return BeatMapHandler.Direction.Down; }
-    //     else if (v2.x <= -1) { return BeatMapHandler.Direction.Left; }
-    //     else { return BeatMapHandler.Direction.Right; }
-    // }
 
     public void HideZeroGradeDisplayTimer()
     {

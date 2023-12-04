@@ -7,11 +7,13 @@ public class PlayerSFX : MonoBehaviour
     [SerializeField]
     private List<AudioClip> m_AudioClipList = new();
     private AudioSource m_AudioSource;
+    public SettingsScriptableObject settingValues;
 
     void Start()
     {
         if(m_AudioClipList.Count == 0) { Debug.LogError("No Player SFX to play"); }
         m_AudioSource = GetComponent<AudioSource>();
+        m_AudioSource.volume = settingValues.SFXVolumePercent;
     }
 
     public void PlayAudioClip(int i)

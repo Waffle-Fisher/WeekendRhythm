@@ -15,7 +15,7 @@ public class ScoreManager : MonoBehaviour
     [Tooltip("First value is the minimum combo score to reach, Second value is the amount of extra points awarded when you correctly hit a beat")]
     private List<Vector2Int> ComboValues = new();
 
-    private int score = 0;
+    public int Score { get; private set;} = 0;
 
     private void Awake()
     {
@@ -24,8 +24,8 @@ public class ScoreManager : MonoBehaviour
     }
 
     public void AwardPoints(int index){
-        score += PointValues[index];
-        score += ComboBonus();
+        Score += PointValues[index];
+        Score += ComboBonus();
         UpdateScoreText();
     }
 
@@ -33,7 +33,7 @@ public class ScoreManager : MonoBehaviour
     {
         if (TryGetComponent<TextMeshProUGUI>(out TextMeshProUGUI scoreText))
         {
-            scoreText.text = String.Format("Score: {0:0000}",score);
+            scoreText.text = String.Format("Score: {0:0000}",Score);
         }
     }
 

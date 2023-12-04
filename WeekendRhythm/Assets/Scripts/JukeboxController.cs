@@ -6,6 +6,7 @@ public class JukeboxController : MonoBehaviour
 {
     public static JukeboxController Instance;
     public AudioSource AudioSource { get; private set; }
+    public SettingsScriptableObject settingValues;
 
     private void Awake()
     {
@@ -16,8 +17,8 @@ public class JukeboxController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        DontDestroyOnLoad(this.gameObject);
-        AudioSource.volume = SettingsData.Instance.settingValues.MusicVolumePercent;
+        //DontDestroyOnLoad(this.gameObject);
+        AudioSource.volume = settingValues.MusicVolumePercent;
     }
 
     public IEnumerator PlaySong(float delay)

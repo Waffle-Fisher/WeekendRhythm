@@ -128,7 +128,6 @@ public class BeatMapHandler : MonoBehaviour
         beatObjects[CurrentBeatIndex].SetActive(false);
         CurrentBeatIndex++;
         if (CurrentBeatIndex >= beatObjects.Count) {
-            Debug.Log("Processing Song Conlcusion");
             StartCoroutine(ProcessSongConclusion());
         }
         else
