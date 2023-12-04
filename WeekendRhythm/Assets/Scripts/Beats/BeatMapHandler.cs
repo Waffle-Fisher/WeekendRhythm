@@ -91,7 +91,7 @@ public class BeatMapHandler : MonoBehaviour
     {
         beats = levelBeatMapSO.beatMap;
         scm = GetComponent<SongConclusionManager>();
-        detectorPos = PlayerInput.Instance.transform.position;
+        detectorPos = PlayerInputSystem.Instance.transform.position;
         if(beatSpaceMin > beatSpaceMax) { Debug.LogError("beatSpaceMin is greater than beatSpaceMax"); }
         if(travelTime == 0) { Debug.LogError("Travel Time is 0. Leads to division by 0"); }
         movementSpeed = (spawnPos.x - detectorPos.x) / travelTime;
@@ -148,7 +148,7 @@ public class BeatMapHandler : MonoBehaviour
         if (g.transform.position.x <= detectorPos.x)
         {
             IncrementCurrentBeat();
-            PlayerInput.Instance.HideZeroGradeDisplayTimer();
+            PlayerInputSystem.Instance.HideZeroGradeDisplayTimer();
             BeatGradeUpdater.Instance.UpdateText("Miss");
             BeatGradeUpdater.Instance.ShowText();
         }

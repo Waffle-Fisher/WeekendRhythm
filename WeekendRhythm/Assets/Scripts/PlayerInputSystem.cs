@@ -4,15 +4,10 @@ using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerInput : MonoBehaviour
+public class PlayerInputSystem : MonoBehaviour
 {
-    public static PlayerInput Instance { get; private set; }
+    public static PlayerInputSystem Instance { get; private set; }
 
-    [SerializeField] 
-    InputAction input;
-    [SerializeField]
-    InputAction escape;
-    [SerializeField]
     [Tooltip("The latest timeDif a beat can score a great")]
     float greatMargin = 0.5f;
     [SerializeField]
@@ -26,44 +21,63 @@ public class PlayerInput : MonoBehaviour
     [Min(0)]
     int AudioClipIndex = 0;
 
-
+    private PlayerInput playerInput;
     float GradeDisplayTimer = 0f;
-
     BeatGradeUpdater bguInstance;
     private PlayerSFX pSFX;
     private PauseGameController pauseGC;
-    void OnEnable()
-    {
-        input.Enable();
-        escape.Enable();
-    }
-
-    void OnDisable()
-    {
-        input.Disable();
-        escape.Disable();
-    }
-
     private void Awake()
     {
         if (Instance == null) { Instance = this; }
         else { Destroy(gameObject); }
-    }
-
-    private void Start()
-    {
         if (inputDistanceRange < greatMargin) { Debug.LogError("inputTimeRange is smaller than greatMargin"); }
-        bguInstance = BeatGradeUpdater.Instance;
+        
         pSFX = GetComponent<PlayerSFX>();
         pauseGC = PauseGameController.Instance;
+        playerInput = GetComponent<PlayerInput>();
+
+        Controls controls = new Controls();
+        controls.Enable();
+        controls.Actions.Left.performed += PressedLeft;
+        controls.Actions.Right.performed += PressedRight;
+        controls.Actions.Down.performed += PressedDown;
+        controls.Actions.Up.performed += PressedUp;
+        controls.Actions.Escape.performed += Pause;
     }
 
+    void Start()
+    {
+        bguInstance = BeatGradeUpdater.Instance;
+    }
     void Update()
     {
         RemoveGradeText();
-        if (escape.WasPressedThisFrame())
-        {
-            if(!pauseGC.IsPaused)
+    }
+
+    private void PressedLeft(InputAction.CallbackContext context)
+    {
+        if(!context.performed) { return; }
+        ProcessGrade(BeatMapHandler.Direction.Left);
+    }
+    private void PressedRight(InputAction.CallbackContext context)
+    {
+        if(!context.performed) { return; }
+        ProcessGrade(BeatMapHandler.Direction.Right);
+    }
+    private void PressedDown(InputAction.CallbackContext context)
+    {
+        if(!context.performed) { return; }
+        ProcessGrade(BeatMapHandler.Direction.Down);
+    }
+    private void PressedUp(InputAction.CallbackContext context)
+    {
+        if(!context.performed) { return; }
+        ProcessGrade(BeatMapHandler.Direction.Up);
+    }
+    private void Pause(InputAction.CallbackContext context)
+    {
+        if(!context.performed) { return; }
+        if(!pauseGC.IsPaused)
             {
                 pauseGC.Pause();
                 pauseGC.ToggleSettingsMenu();
@@ -72,18 +86,13 @@ public class PlayerInput : MonoBehaviour
                 pauseGC.Resume();
                 pauseGC.ToggleSettingsMenu();
             }
-        }
-        else if (!pauseGC.IsPaused && input.WasPressedThisFrame()) {
-            ProcessGrade();
-        }
     }
-
-    private void ProcessGrade()
+    private void ProcessGrade(BeatMapHandler.Direction dir)
     {
         pSFX.PlayAudioClip(AudioClipIndex);
         float distanceDifference = BeatMapHandler.Instance.GetDistanceDifference();
         if (distanceDifference > inputDistanceRange) { return; }
-        ScoreGradeHit(distanceDifference);
+        ScoreGradeHit(distanceDifference, dir);
         BeatMapHandler.Instance.IncrementCurrentBeat();
     }
 
@@ -102,14 +111,14 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
-    private void ScoreGradeHit(float distDif)
+    private void ScoreGradeHit(float distDif, BeatMapHandler.Direction dir)
     {
         Debug.Log("Distance Difference:" + distDif);
         if(bguInstance.GetEnabled()){ bguInstance.HideText(); }
         if (distDif > inputDistanceRange) { 
             ComboCountUpdater.Instance.ResetCombo();
             bguInstance.UpdateText("Miss");
-        } else if(GetInput() != BeatMapHandler.Instance.CurrentBeat.direction) { 
+        } else if(dir != BeatMapHandler.Instance.CurrentBeat.direction) { 
             ComboCountUpdater.Instance.ResetCombo();
             bguInstance.UpdateText("Wrong"); 
         } else if (distDif < greatMargin) { 
@@ -123,14 +132,14 @@ public class PlayerInput : MonoBehaviour
         } bguInstance.ShowText();
     }
 
-    BeatMapHandler.Direction GetInput()
-    {
-        Vector2 v2 = input.ReadValue<Vector2>();
-        if (v2.y >= 1) { return BeatMapHandler.Direction.Up; }
-        else if (v2.y <= -1) { return BeatMapHandler.Direction.Down; }
-        else if (v2.x <= -1) { return BeatMapHandler.Direction.Left; }
-        else { return BeatMapHandler.Direction.Right; }
-    }
+    // BeatMapHandler.Direction GetInput()
+    // {
+    //     Vector2 v2 = input.ReadValue<Vector2>();
+    //     if (v2.y >= 1) { return BeatMapHandler.Direction.Up; }
+    //     else if (v2.y <= -1) { return BeatMapHandler.Direction.Down; }
+    //     else if (v2.x <= -1) { return BeatMapHandler.Direction.Left; }
+    //     else { return BeatMapHandler.Direction.Right; }
+    // }
 
     public void HideZeroGradeDisplayTimer()
     {
